@@ -1,0 +1,13 @@
+#This file is meant to be sourced by setup.sh and run_autograder
+
+#Variables to change to match your setup
+GIT_HOST="bitbucket.org" #change to github.com if using GitHub
+GIT_REPO="git@bitbucket.org:tronroberto/mautogradeexampletests.git"
+
+#Test repository destination
+MAUTOGRADE_DIR=$HOME_DIR/mAutograde
+MAUTOGRADE_TESTS_DIR=$HOME_DIR/autograder/tests
+
+#Variables for this script
+HOME_DIR="/root"
+SSH_DIR="$HOME_DIR/.ssh"

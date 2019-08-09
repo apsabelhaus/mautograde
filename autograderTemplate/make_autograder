@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+AUTOGRADER_ZIP=autograder.zip
+
+if [ -f "$AUTOGRADER_ZIP" ]; then
+    rm "$AUTOGRADER_ZIP"
+fi
+zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup.sh setup_variables ssh_config_template

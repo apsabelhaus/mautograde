@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Set up autograder files
+AUTOGRADER_DIR="/autograder"
+SOURCE_DIR="${AUTOGRADER_DIR}/source"
+RESULT_DIR="${AUTOGRADER_DIR}/results"
+SUBMISSION_DIR="${AUTOGRADER_DIR}/submission"
+
+# Get common setup variables (repository information)
+source setup_variables
+
+# Make sure mAutograde and tests are up to date
+cd "${MAUTOGRADE_DIR}"
+git pull
+cd "${MAUTOGRADE_TESTS_DIR}"
+git pull
+
+# Stage submission
+cp "${SUBMISSION_DIR}"/* "${SOURCE_DIR}"
+cd "${SOURCE_DIR}"
+
+# Run tests
+octave --eval "mautogradeRunTests $MAUTOGRADE_TESTS_DIR" > "${RESULT_DIR}"/results.json

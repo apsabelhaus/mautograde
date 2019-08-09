@@ -1,0 +1,3 @@
+Host GIT_HOST
+  IdentityFile ~/.ssh/id_rsa_deploy_key
+  IdentitiesOnly yes
