@@ -25,7 +25,7 @@ end
 
 function testFileList=getTestFileList(dirName)
 d=dir(dirName);
-fileList={d(~[d.isdir]).name}; 
+fileList={d(~[d.isdir]).name};
 %recognize test files
-flagTestFile=~cellfun(@isempty,regexpi(fileList,'(.*test\.m$|test.*\.m$'));
+flagTestFile=~cellfun(@isempty,regexpi(fileList,'(.*test\.m$|test.*\.m$)'));
 testFileList=fileList(flagTestFile);

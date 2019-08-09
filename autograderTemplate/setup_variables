@@ -4,10 +4,14 @@
 GIT_HOST="bitbucket.org" #change to github.com if using GitHub
 GIT_REPO="git@bitbucket.org:tronroberto/mautogradeexampletests.git"
 
-#Test repository destination
-MAUTOGRADE_DIR=$HOME_DIR/mAutograde
-MAUTOGRADE_TESTS_DIR=$HOME_DIR/autograder/tests
+# Gradescope setup
+AUTOGRADER_DIR="/autograder"
 
-#Variables for this script
-HOME_DIR="/root"
-SSH_DIR="$HOME_DIR/.ssh"
+#Variables for the setup and run scripts
+SSH_DIR="$HOME/.ssh"
+
+#Test repository destination
+MAUTOGRADE_DIR=$AUTOGRADER_DIR/mAutograde
+MAUTOGRADE_TESTS_DIR=$AUTOGRADER_DIR/tests
+
+

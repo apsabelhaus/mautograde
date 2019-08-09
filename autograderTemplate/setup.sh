@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-source setup_variables
+source /autograder/source/setup_variables
 
 # Setting up SSH access to the Git host
 mkdir -p $SSH_DIR
-sed 's/GIT_HOST/$GIT_HOST/' ssh_config_template > $SSH_DIR/config
+sed "s/GIT_HOST/$GIT_HOST/" ssh_config_template > $SSH_DIR/config
 
 # Make sure to include your private key here
-cp id_rsa_deploy_key $SSH_DIR/.ssh/id_rsa_deploy_key
+cp id_rsa_deploy_key $SSH_DIR/id_rsa_deploy_key
 # To prevent host key verification errors at runtime
 ssh-keyscan -t rsa $GIT_HOST >> $SSH_DIR/known_hosts
 
@@ -18,9 +18,9 @@ git clone https://tronroberto@bitbucket.org/tronroberto/mautograde.git $MAUTOGRA
 git clone $GIT_REPO $MAUTOGRADE_TESTS_DIR
 
 #Install Octave
-apt-get install octave
+apt-get --yes install octave
 
 # Setup octave path
-echo "addpath ('$MAUTOGRADE_DIR')" >> $HOME_DIR/.octaverc
+echo "addpath ('$MAUTOGRADE_DIR')" >> $HOME/.octaverc
 #Note: only the base mAutograde files are added to the path. The test files will be added by the Octave scripts when running the tests.
 
