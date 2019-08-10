@@ -4,7 +4,7 @@ if ~exist('flagWriteFile','var')
 end
 
 nbResults=length(testResults);
-testResultsStruct=struct('score',{testResults.Passed},'name',{testResults.Name});
+testResultsStruct=struct('score',{testResults.Passed},'max_score',num2cell(ones(1,nbResults)),'name',{testResults.Name});
 for iResult=1:nbResults
     details=testResults(iResult).Details;
     if isempty(details)

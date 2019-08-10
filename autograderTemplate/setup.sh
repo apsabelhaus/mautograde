@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-source /autograder/source/setup_variables
+cd /autograder/source
+source setup_variables
 
 # Setting up SSH access to the Git host
 mkdir -p $SSH_DIR

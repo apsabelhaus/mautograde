@@ -12,7 +12,12 @@ end
 %check number of elements in s
 switch numel(s)
     case 0 %(empty)
-        fprintf(fid,'{}');
+        switch class(s)
+            case 'char'
+                fprintf(fid,'""');
+            otherwise
+                fprintf(fid,'{}');
+        end
     case 1
         switch class(s)
             case 'struct'
