@@ -9,15 +9,24 @@ for iFunction=1:nbFunctions
     f=functions{iFunction};
     %get name of calling functions
     s=dbstack();
-    tests(iFunction).Name=[s(2).name ':' func2str(f)];
+    fName=func2str(f);
+    tests(iFunction).Name=mautogradeFunctionNameJoin(s(2).name,fName);
     tests(iFunction).Passed=1;
+    flagReturnsScore=nargout(f)>0;
     tic
     try
-        f()
+        if ~flagReturnsScore
+            f()
+            score=NaN;
+        else
+            score=f();
+        end
     catch ME
+        score=0;
         tests(iFunction).Passed=0;
         tests(iFunction).Failed=1;
         tests(iFunction).Details=struct('identifier',ME.identifier,'message',ME.message);
     end
     tests(iFunction).Duration=toc;
+    tests(iFunction).Score=score;
 end

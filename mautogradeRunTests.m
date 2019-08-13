@@ -8,17 +8,21 @@ function mautogradeRunTests(fileName)
 switch exist(fileName,'file')
     case 2
         eval(['testResults= ' fileName '();'])
-        mautogradeJsonResults(testResults)
+        testInfo=mAutogradeFunctionScan(fileName);
+        mautogradeJsonResults(testResults,testInfo)
     case 7
         testFileNames=getTestFileList(fileName);
         addpath(fileName)
         testResults=[];
+        testInfo=[];
         for iFile=1:length(testFileNames)
-            scriptName=strrep(testFileNames{iFile},'.m','');
+            scriptFullName=testFileNames{iFile};
+            scriptName=strrep(scriptFullName,'.m','');
             cmd=['testResults=[testResults; ' scriptName '()];'];
             eval(cmd)
+            testInfo=structMerge(testInfo,mautogradeFunctionScan(scriptFullName));
         end
-        mautogradeJsonResults(testResults)
+        mautogradeJsonResults(testResults,testInfo)
     otherwise
         error(['Could not find file ' fileName '.m or directory ' fileName])
 end
@@ -29,3 +33,16 @@ fileList={d(~[d.isdir]).name};
 %recognize test files
 flagTestFile=~cellfun(@isempty,regexpi(fileList,'(.*test\.m$|test.*\.m$)'));
 testFileList=fileList(flagTestFile);
+
+function s=structMerge(s1,s2)
+if isempty(s1)
+    s=s2;
+elseif isempty(s2)
+    s=s1;
+else
+    fields=fieldnames(s2);
+    s=s1;
+    for iField=1:length(fields)
+        s.(fields{iField})=s2.(fields{iField});
+    end
+end
