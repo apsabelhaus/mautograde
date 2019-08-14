@@ -16,10 +16,11 @@ switch exist(fileName,'file')
         testResults=[];
         testInfo=[];
         for iFile=1:length(testFileNames)
-            scriptFullName=testFileNames{iFile};
-            scriptName=strrep(scriptFullName,'.m','');
+            scriptNameWithExt=testFileNames{iFile};
+            scriptName=strrep(scriptNameWithExt,'.m','');
             cmd=['testResults=[testResults; ' scriptName '()];'];
             eval(cmd)
+            scriptFullName=fullname(fileName,scriptNameWithExt);
             testInfo=structMerge(testInfo,mautogradeFunctionScan(scriptFullName));
         end
         mautogradeJsonResults(testResults,testInfo)
