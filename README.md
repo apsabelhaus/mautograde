@@ -4,6 +4,9 @@ Tools for using Matlab/Octave with the Gradescope Autograder
 # mAutograde base files
 The m files contain Octave/Matlab functions to run simple tests, collect the results, and write them to standard output, which is then intended to be redirected to the `result.json` file used by Gradescope. See https://gradescope-autograders.readthedocs.io/en/latest/specs/ for details on the output format.
 
+## Known limitations
+The framework does not support setup/tear-down of test fixtures.
+
 # How to use the autograder template
 The directory `autograderTemplate` contains the files to be submitted on Gradescope for the autograder. 
 

@@ -8,7 +8,7 @@ function mautogradeRunTests(fileName)
 switch exist(fileName,'file')
     case 2
         eval(['testResults= ' fileName '();'])
-        testInfo=mAutogradeFunctionScan(fileName);
+        testInfo=mautogradeFunctionScan(fileName);
         mautogradeJsonResults(testResults,testInfo)
     case 7
         testFileNames=getTestFileList(fileName);
