@@ -12,6 +12,10 @@ cp id_rsa_deploy_key $SSH_DIR/id_rsa_deploy_key
 # To prevent host key verification errors at runtime
 ssh-keyscan -t rsa $GIT_HOST >> $SSH_DIR/known_hosts
 
+# Set Git identity (placeholder)
+git config --global user.email "autograder@placeholder.org"
+git config --global user.name "Gradescope Autograder"
+
 # Clone autograder files (public repository)
 git clone https://tronroberto@bitbucket.org/tronroberto/mautograde.git $MAUTOGRADE_DIR
 
