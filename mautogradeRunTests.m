@@ -20,7 +20,7 @@ switch exist(fileName,'file')
             scriptName=strrep(scriptNameWithExt,'.m','');
             cmd=['testResults=[testResults; ' scriptName '()];'];
             eval(cmd)
-            scriptFullName=fullname(fileName,scriptNameWithExt);
+            scriptFullName=fullfile(fileName,scriptNameWithExt);
             testInfo=structMerge(testInfo,mautogradeFunctionScan(scriptFullName));
         end
         mautogradeJsonResults(testResults,testInfo)
