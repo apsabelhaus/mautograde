@@ -25,7 +25,7 @@ switch numel(s)
             case 'char'
                 writeChar(fid,s)
             case 'double'
-                fprintf(fid,'%d',s);
+                fprintf(fid,num2str(s));
             otherwise
                 error(['Type ' class(s) 'not supported'])
         end

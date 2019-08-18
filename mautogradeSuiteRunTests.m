@@ -4,12 +4,12 @@
 %of a directory, look for all the files starting/ending with "test" in that
 %directory, and run tem as mAutograde scripts. If fileName is empty, use
 %the current directory
-function mautogradeRunTests(fileName)
+function mautogradeSuiteRunTests(fileName)
 switch exist(fileName,'file')
     case 2
         eval(['testResults= ' fileName '();'])
-        testInfo=mautogradeFunctionScan(fileName);
-        mautogradeJsonResults(testResults,testInfo)
+        testInfo=mautogradeSuiteScan(fileName);
+        mautogradeSuiteJsonWriter(testResults,testInfo)
     case 7
         testFileNames=getTestFileList(fileName);
         addpath(fileName)
@@ -21,9 +21,9 @@ switch exist(fileName,'file')
             cmd=['testResults=[testResults; ' scriptName '()];'];
             eval(cmd)
             scriptFullName=fullfile(fileName,scriptNameWithExt);
-            testInfo=structMerge(testInfo,mautogradeFunctionScan(scriptFullName));
+            testInfo=structMerge(testInfo,mautogradeSuiteScan(scriptFullName));
         end
-        mautogradeJsonResults(testResults,testInfo)
+        mautogradeSuiteJsonWriter(testResults,testInfo)
     otherwise
         error(['Could not find file ' fileName '.m or directory ' fileName])
 end
@@ -32,7 +32,7 @@ function testFileList=getTestFileList(dirName)
 d=dir(dirName);
 fileList={d(~[d.isdir]).name};
 %recognize test files
-flagTestFile=~cellfun(@isempty,regexpi(fileList,'(.*test\.m$|test.*\.m$)'));
+flagTestFile=~cellfun(@isempty,regexpi(fileList,'(.*test\.m$|^test.*\.m$)'));
 testFileList=fileList(flagTestFile);
 
 function s=structMerge(s1,s2)

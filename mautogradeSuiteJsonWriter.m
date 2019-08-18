@@ -1,4 +1,4 @@
-function mautogradeJsonResults(testResults,testInfo,flagWriteFile)
+function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
 if ~exist('testInfo','var')
     testInfo=[];
 end
@@ -12,11 +12,8 @@ for iResult=1:nbResults
     result=testResults(iResult);
     fName=result.Name;
     %max_score
-    if isfield(testInfo,fName)
-        max_score=testInfo.(fName);
-    else
-        max_score=1;
-    end
+    max_score=max(getFieldOrDefault(testInfo, {fName 'score'}, 1),1);
+    visibility=getFieldOrDefault(testInfo, {fName 'visibility'}, 'visible');
     %score
     if ~isnan(result.Score)
         score=result.Score;
@@ -30,23 +27,30 @@ for iResult=1:nbResults
     if score>max_score
         warning(['Detected score>max_score for test ' fName])
     end
-    
     %output
     details=result.Details;
     if isempty(details)
         output='';
     else
         if isfield(details,'identifier')
-            output=[details.identifier '\n' details.message];
+            if isempty(details.identifier)
+                id='Error';
+            else
+                id=details.identifier;
+            end
+            output=[id ' -- ' details.message];
         elseif isfield(details,'DiagnosticRecord') && ~isempty(details.DiagonsticRecord.Exception)
             ME=DiagonsticRecord.Exception;
-            output=[ME.identifier '\n' ME.message];
+            output=[ME.identifier ' -- ' ME.message];
         end
     end
+    
+    output=[output result.TextOutput];
     
     testResultsStruct(iResult).score=score;
     testResultsStruct(iResult).max_score=max_score;
     testResultsStruct(iResult).output=output;
+    testResultsStruct(iResult).visibility=visibility;
 end
 suiteResult.execution_time=sum([testResults.Duration]);
 suiteResult.tests=testResultsStruct;
@@ -64,3 +68,27 @@ if flagWriteFile
     fclose(fid);
 end
 
+
+%function val=getFieldOrDefault(data,fields,valDefault)
+%Get (possibly nested) fields, or a default value if does not exist or
+%if the field empty
+function val=getFieldOrDefault(data,fields,valDefault)
+fields=mautogradeEnsureCell(fields);
+flagAssigned=false;
+for iField=1:length(fields)
+    fieldName=fields{iField};
+    if isfield(data,fieldName)
+        data=data.(fieldName);
+    else
+        val=valDefault;
+        flagAssigned=true;
+        break
+    end
+end
+if ~flagAssigned
+    if ~isempty(data)
+        val=data;
+    else
+        val=valDefault;
+    end
+end
