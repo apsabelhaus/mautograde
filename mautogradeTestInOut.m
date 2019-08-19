@@ -1,4 +1,4 @@
-%function mautogradeTestInOut(fhandle,data)
+%function [score,outputMsg]=mautogradeTestInOut(fhandle,data)
 %Inputs
 %   fhandle handle to function to test
 %   data    [nbTests x 1] array of structures with fields
@@ -11,10 +11,13 @@
 %       cmp     [1 x nbOutputs] (non-cell) array with functions to compare actual
 %               and expected outputs. Each function returns true if they
 %               are equivalent.
-function [score,outputMsg]=mautogradeTestInOut(fTested,dataInOut)
+%Optional inputs
+%   'nbOutputs',nbOutputs     Number of outputs of fhandle (necessary if 
+function [score,outputMsg]=mautogradeTestInOut(fTested,dataInOut,varargin)
 nbTests=length(dataInOut);
 score=0;
 outputMsg='';
+
 for iTest=1:nbTests
     %replace function handle inputs with actual results
     inputActual=mautogradeEnsureCell(dataInOut(iTest).input);
@@ -23,12 +26,13 @@ for iTest=1:nbTests
             inputActual{iInput}=inputActual{iInput}();
         end
     end
-    %run the function under test
-    nbOutputs=nargout(fTested);
-    outputActual=cell(1,nbOutputs);
-    [outputActual{:}]=fTested(dataInOut(iTest).input{:});
-    %compare actual and expected outputs
+    %prepare expected outputs
     outputExpected=mautogradeEnsureCell(dataInOut(iTest).output);
+    nbOutputs=length(outputExpected);
+    %get actual outputs by running the function under test
+    outputActual=cell(1,nbOutputs);
+    [outputActual{:}]=fTested(inputActual{:});
+    %compare actual and expected outputs
     cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
     if length(cmp)~=nbOutputs
         cmp(1:nbOutputs)=cmp;

@@ -38,7 +38,7 @@ for iResult=1:nbResults
             else
                 id=details.identifier;
             end
-            output=[id ' -- ' details.message];
+            output=mautogradeAppendOutput(id, '%s', details.message);
         elseif isfield(details,'DiagnosticRecord') && ~isempty(details.DiagonsticRecord.Exception)
             ME=DiagonsticRecord.Exception;
             output=[ME.identifier ' -- ' ME.message];

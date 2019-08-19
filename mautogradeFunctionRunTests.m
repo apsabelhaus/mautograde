@@ -3,6 +3,8 @@
 %they fail (raise an error or exception) or pass, their names, and
 %execution time
 function tests=mautogradeFunctionRunTests(functions)
+flagRethrowNonAssertionErrors=true;
+
 nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',[]),nbFunctions,1);
 for iFunction=1:nbFunctions
@@ -25,7 +27,7 @@ for iFunction=1:nbFunctions
                 [score,output]=f();
         end
     catch ME
-        if strcmp(ME.identifier,'MATLAB:assertion:failed')
+        if ~flagRethrowNonAssertionErrors || strcmp(ME.identifier,'MATLAB:assertion:failed')
             score=0;
             tests(iFunction).Passed=0;
             tests(iFunction).Failed=1;

@@ -7,7 +7,12 @@
 function mautogradeSuiteRunTests(fileName)
 switch exist(fileName,'file')
     case 2
-        eval(['testResults= ' fileName '();'])
+        [filepath,scriptName]=fileparts(fileName);
+        if ~isempty(filepath) && ~strcmp(filepath,'.')
+            error('Test file must be in the current directory')
+        end
+        fileName=[scriptName,'.m'];
+        eval(['testResults= ' scriptName '();'])
         testInfo=mautogradeSuiteScan(fileName);
         mautogradeSuiteJsonWriter(testResults,testInfo)
     case 7
