@@ -1,6 +1,6 @@
 %function outputMsg=mAutogradeAppendOutput(outputMsg,varargin)
 function outputMsg=mautogradeAppendOutput(outputMsg,varargin)
-newLineStr=char(10);
+newLineStr='\n\r';
 if ~ischar(outputMsg)
     outputMsg=num2str(outputMsg);
 end
