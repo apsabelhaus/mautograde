@@ -44,7 +44,7 @@ while ~feof(fid)
             %Check for various types of metadata, and capture if so
             %MAX_SCORE
             tokens=regexp(line,'^\s*%\s*MAX_SCORE\s*=*\s*(?<maxScore>[\d\.]+)','names');
-            if ~isempty(tokens)
+            if ~isempty(tokens) && ~isempty(tokens.maxScore)
                 name=mautogradeFunctionNameJoin(fileName,currentFunctionName);
                 functionInfo.(name).score=str2double(tokens.maxScore);
                 lineParserState='searchingMetadata';
@@ -54,7 +54,7 @@ while ~feof(fid)
             end
             %VISIBILITY
             tokens=regexp(line,'^\s*%\s*VISIBILITY\s*=*\s*(?<visibility>[\w_]+)','names');
-            if ~isempty(tokens)
+            if ~isempty(tokens) && ~isempty(tokens.visibility)
                 name=mautogradeFunctionNameJoin(fileName,currentFunctionName);
                 functionInfo.(name).visibility=tokens.visibility;
                 lineParserState='searchingMetadata';
