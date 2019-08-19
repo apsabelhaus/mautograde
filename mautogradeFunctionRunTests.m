@@ -3,7 +3,7 @@
 %they fail (raise an error or exception) or pass, their names, and
 %execution time
 function tests=mautogradeFunctionRunTests(functions)
-flagRethrowNonAssertionErrors=true;
+flagRethrowNonAssertionErrors=false;
 
 nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',[]),nbFunctions,1);
