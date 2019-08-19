@@ -21,4 +21,4 @@ cp "${SUBMISSION_DIR}"/* "${SOURCE_DIR}"
 cd "${SOURCE_DIR}"
 
 # Run tests
-octave --no-gui --eval "mautogradeRunTests $MAUTOGRADE_TESTS_DIR" > "${RESULT_DIR}"/results.json
+octave --no-gui --eval "mautogradeSuiteRunTests $MAUTOGRADE_TESTS_DIR" > "${RESULT_DIR}"/results.json
