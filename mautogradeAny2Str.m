@@ -17,8 +17,22 @@ while ivarargin<=length(varargin)
 end
 
 switch class(s)
-    case {'char','double'}
-        str=mautogradeAppendOutput(strPrev,num2str(s));
+    case 'char'
+        str=s;
+        nbStrings=size(str,1);
+        delimiter=repmat('''', nbStrings,1);
+        str=[delimiter str delimiter];
+    case 'double'
+        str=num2str(s);
+        if numel(s)>1
+            if size(s,1)==1
+                str=['[',str,']'];
+            else
+                str=char('[',str,']');
+            end
+        end
+        str=mautogradeChar2Multiline(str);
+        str=mautogradeAppendOutput(strPrev,str);
     case 'struct'
         sNamesCells=['struct' ...
             reshape([fieldnames(s) struct2cell(s)]',1,[])...
@@ -30,6 +44,7 @@ switch class(s)
         for iCell=1:length(s)
             str=mautogradeAny2Str(s{iCell},'appendTo',str);
         end
+        
     case 'logical'
         sStrCell=arrayfun(@logical2str, s, 'UniformOutput',false);
         str=mautogradeAny2Str(sStrCell,'appendTo',strPrev);
