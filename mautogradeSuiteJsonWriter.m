@@ -45,7 +45,7 @@ for iResult=1:nbResults
         end
     end
     
-    output=[output result.TextOutput];
+    output=strrep([output result.TextOutput],char(10),'\n'); %#ok<CHARTEN>
     
     testResultsStruct(iResult).score=score;
     testResultsStruct(iResult).max_score=max_score;
