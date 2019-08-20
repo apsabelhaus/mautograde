@@ -12,11 +12,30 @@
 %               and expected outputs. Each function returns true if they
 %               are equivalent.
 %Optional inputs
-%   'nbOutputs',nbOutputs     Number of outputs of fhandle (necessary if 
-function [score,outputMsg]=mautogradeTestInOut(fTested,dataInOut,varargin)
+%   'fname',fname     Name of the function fTested to be used in messages.
+%Outputs
+%   score       Total number of outputs, across all tests, that passed
+%   outputMsg   Message with what tests failed (none if all pass)
+%   
+function [score,outputMsg,flagPassed]=mautogradeTestInOut(fTested,dataInOut,varargin)
 nbTests=length(dataInOut);
 score=0;
 outputMsg='';
+flagPassed=true;
+fTestedName=func2str(fTested);
+
+%optional parameters
+ivarargin=1;
+while ivarargin<=length(varargin)
+    switch lower(varargin{ivarargin})
+        case 'fname'
+            ivarargin=ivarargin+1;
+            fTestedName=varargin{ivarargin};
+        otherwise
+            error(['Argument ' varargin{ivarargin} ' not valid!'])
+    end
+    ivarargin=ivarargin+1;
+end
 
 for iTest=1:nbTests
     %replace function handle inputs with actual results
@@ -41,22 +60,31 @@ for iTest=1:nbTests
         fEqual=cmp{iOutput};
         flagOutputEquivalent=fEqual(outputActual{iOutput},outputExpected{iOutput});
         if flagOutputEquivalent
-           score=score+1;
+            score=score+1;
         else
-           outputMsg=mautogradeAppendOutput(outputMsg,...
-               'Failed equality test %d/%d at output %d/%d',...
-               iTest,nbTests,iOutput,nbOutputs);
-           outputMsg=mautogradeAppendOutput(outputMsg,...
-               'Tested function: %s', func2str(fTested));
-           outputMsg=mautogradeAppendOutput(outputMsg,...
-                'Comparison function: %s', func2str(fEqual));
-           outputMsg=mautogradeAppendOutput(outputMsg,...
-                'Output from tested function: %s',...
-                mautogradeAny2Str(outputActual{iOutput}));
-           outputMsg=mautogradeAppendOutput(outputMsg,...
+            flagPassed=false;
+            if nbTests>1
+                outputMsg=mautogradeAppendOutput(outputMsg,...
+                    'Failed test %d/%d at output %d/%d',...
+                    iTest,nbTests,iOutput,nbOutputs);
+            else
+                outputMsg=mautogradeAppendOutput(outputMsg,...
+                    'Failed at output %d/%d',...
+                    iOutput,nbOutputs);
+            end                
+            outputMsg=mautogradeAppendOutput(outputMsg,...
                 'Expected output: %s',...
                 mautogradeAny2Str(outputExpected{iOutput}));
-         end
+            outputMsg=mautogradeAppendOutput(outputMsg,...
+                'Actual output: %s',...
+                mautogradeAny2Str(outputActual{iOutput}));
+            outputMsg=mautogradeAppendOutput(outputMsg,...
+                'Comparison function: %s', func2str(fEqual));
+        end
+    end
+    if ~flagPassed
+        outputMsg=mautogradeAppendOutput(...
+            ['Tested function: ' fTestedName],outputMsg);
     end
 end
 
