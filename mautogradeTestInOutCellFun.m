@@ -1,4 +1,4 @@
-function [score,outputMsg]=mautogradeTestInOutCellFun(fTested,dataInOut,fOutputCell)
+function [score,outputMsg,flagPassed]=mautogradeTestInOutCellFun(fTested,dataInOut,fOutputCell)
 nbOutputsExpected=length(dataInOut(1).output);
 %decoration of function to output sizes instead of real outputs
 fTestedWrap=@(varargin) outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin{:}); 
@@ -8,8 +8,8 @@ for iData=1:length(dataInOut)
 end
 %call the test input-output test function. We need to explicitly specify
 %the number of outputs because it cannot be detected 
-[score,outputMsg]=mautogradeTestInOut(fTestedWrap,dataInOut,...
-    'nbOutputs',nbOutputsExpected);
+[score,outputMsg,flagPassed]=mautogradeTestInOut(fTestedWrap,dataInOut,...
+    'fname',func2str(fTested));
 
 function varargout=outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin)
 output=cell(1,nbOutputsExpected);
