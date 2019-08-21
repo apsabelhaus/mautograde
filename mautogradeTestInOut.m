@@ -10,7 +10,7 @@
 %       output  [1 x nbOutputs] cell array with expected outputs
 %       cmp     [1 x nbOutputs] (non-cell) array with functions to compare actual
 %               and expected outputs. Each function returns true if they
-%               are equivalent.
+%               are equivalent. Defaults to mautogradeCmpEq.
 %Optional inputs
 %   'fname',fname     Name of the function fTested to be used in messages.
 %Outputs
@@ -52,9 +52,14 @@ for iTest=1:nbTests
     outputActual=cell(1,nbOutputs);
     [outputActual{:}]=fTested(inputActual{:});
     %compare actual and expected outputs
-    cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
-    if length(cmp)~=nbOutputs
-        cmp(1:nbOutputs)=cmp;
+    if isfield(dataInOut(iTest),'cmp') && ~isempty(mautogradeEnsureCell(dataInOut(iTest).cmp))
+        cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
+        if length(cmp)~=nbOutputs
+            cmp(1:nbOutputs)=cmp;
+        end
+    else
+        cmp=cell(1,nbOutputs);
+        cmp(:)={@mautogradeCmpEq};
     end
     for iOutput=1:nbOutputs
         fEqual=cmp{iOutput};
