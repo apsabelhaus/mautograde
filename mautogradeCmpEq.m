@@ -6,6 +6,8 @@ switch class(expected)
         flag=cmpStruct(expected,actual);
     case 'cell'
         flag=cmpCell(expected,actual);
+    case 'logical'
+        flag=all(expected(:)==actual(:));
     otherwise
         error('Type not supported')
 end
