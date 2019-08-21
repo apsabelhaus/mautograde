@@ -1,5 +1,5 @@
 function [score,outputMsg,flagPassed]=mautogradeTestInOutCellFun(fTested,dataInOut,fOutputCell)
-nbOutputsExpected=length(dataInOut(1).output);
+nbOutputsExpected=length(mautogradeEnsureCell(dataInOut(1).output));
 %decoration of function to output sizes instead of real outputs
 fTestedWrap=@(varargin) outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin{:}); 
 %setup comparison function
