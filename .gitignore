@@ -44,7 +44,6 @@ flycheck_*.el
 /server/
 
 # projectiles files
-.projectile.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -68,3 +67,5 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.DS_Store

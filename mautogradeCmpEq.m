@@ -19,7 +19,7 @@ function flag=cmpCell(expected,actual)
 flag=cmpSize(expected,actual);
 if flag
     for iCell=1:numel(expected)
-        flag=and(flag,mautogradeTestCmpEq(expected{iCell},actual{iCell}));
+        flag=and(flag,mautogradeCmpEq(expected{iCell},actual{iCell}));
         if ~flag
             %break early if one of the cells does not match
             break
@@ -28,16 +28,26 @@ if flag
 end
 
 function flag=cmpStruct(expected, actual)
-fieldsExpected=fieldnames(expected);
-fieldsActual=fieldnames(actual);
-flag=cmpCell(fieldsExpected,fieldsActual);
+flag=cmpSize(expected,actual);
 if flag
-    for iField=1:numel(fieldsExpected)
-        fieldName=fieldsExpected{iField};
-        flag=and(flag,mautogradeTestCmpEq(expected.(fieldName),actual.(fieldName)));
-        if ~flag
-            %break early if one of the cells does not match
-            break
+    nbElements=numel(expected);
+    if numel(expected)>1
+        for iElement=1:nbElements
+            flag=and(flag,mautogradeCmpEq(expected(iElement),actual(iElement)));
+        end
+    else
+        fieldsExpected=fieldnames(expected);
+        fieldsActual=fieldnames(actual);
+        flag=cmpCell(fieldsExpected,fieldsActual);
+        if flag
+            for iField=1:numel(fieldsExpected)
+                fieldName=fieldsExpected{iField};
+                flag=and(flag,mautogradeCmpEq(expected.(fieldName),actual.(fieldName)));
+                if ~flag
+                    %break early if one of the fields does not match
+                    break
+                end
+            end
         end
     end
 end
