@@ -6,3 +6,4 @@ function [score,outputMsg]=mautogradeTestInOutTypes(fTested,dataInOut)
 if ~flagPassed
     outputMsg=mautogradeAppendOutput('Failed test of output types',outputMsg);
 end
+outputMsg=mautogradeAppendOutput('Check that the types of each output are as expected for typical inputs',outputMsg);

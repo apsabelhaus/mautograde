@@ -4,5 +4,6 @@
 function [score,outputMsg]=mautogradeTestInOutDimensions(fTested,dataInOut)
 [score,outputMsg,flagPassed]=mautogradeTestInOutCellFun(fTested,dataInOut,@size);
 if ~flagPassed
-    outputMsg=mautogradeAppendOutput('Failed test of output dimensions',outputMsg);
+    outputMsg=mautogradeAppendOutput('Test failed',outputMsg);
 end
+outputMsg=mautogradeAppendOutput('Check that dimensions of each output are as expected for typical inputs',outputMsg);
