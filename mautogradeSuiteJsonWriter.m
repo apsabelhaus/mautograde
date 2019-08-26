@@ -12,12 +12,12 @@ for iResult=1:nbResults
     result=testResults(iResult);
     fName=result.Name;
     %max_score and visibility
-    scoreNormalization=getFieldOrDefault(testInfo, {fName 'scoreNormalization'},1);
-    scoreMax=max(getFieldOrDefault(testInfo, {fName 'scoreMax'}, 1),1);
+    scoreMax=getFieldOrDefault(testInfo, {fName 'scoreMax'}, 1);
+    scoreNormalization=getFieldOrDefault(testInfo, {fName 'scoreNormalization'},scoreMax);
     visibility=getFieldOrDefault(testInfo, {fName 'visibility'}, 'visible');
     %score
     if ~isnan(result.Score)
-        score=result.Score/scoreNormalization;
+        score=result.Score/scoreNormalization*scoreMax;
     else
         if result.Passed
             score=scoreMax;

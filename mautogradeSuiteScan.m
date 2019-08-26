@@ -55,7 +55,7 @@ while ~feof(fid)
                 optionType=option{3};
                 
                 %check for the presence of the option and capture it
-                expr=['^\s*%\s*' optionName '\s*=*\s*(?<' optionVarName '>[\d\w\.]+)'];
+                expr=['^\s*%\s*\<' optionName '\>\s*=*\s*(?<' optionVarName '>[\d\w\.]+)'];
                 tokens=regexp(line,expr,'names');
                 if ~isempty(tokens) && ~isempty(tokens.(optionVarName))
                     switch optionType
