@@ -42,26 +42,40 @@ while ~feof(fid)
             %to searching functions
             lineParserState='searchingFunction';
             %Check for various types of metadata, and capture if so
-            %MAX_SCORE
-            tokens=regexp(line,'^\s*%\s*MAX_SCORE\s*=*\s*(?<maxScore>[\d\.]+)','names');
-            if ~isempty(tokens) && ~isempty(tokens.maxScore)
-                name=mautogradeFunctionNameJoin(fileName,currentFunctionName);
-                functionInfo.(name).score=str2double(tokens.maxScore);
-                lineParserState='searchingMetadata';
-                if flagVerbose
-                    fprintf('Found option MAX_SCORE = %d\n', functionInfo.(name).score);
+            optionList={
+                {'MAX_SCORE','scoreMax','double'}
+                {'MAX_SCORE_BEFORE_NORMALIZATION','scoreNormalization','double'}
+                {'VISIBILITY','visibility','char'}
+                };
+            nbOptionList=length(optionList);
+            for iOption=1:nbOptionList
+                option=optionList{iOption};
+                optionName=option{1};
+                optionVarName=option{2};
+                optionType=option{3};
+                
+                %check for the presence of the option and capture it
+                expr=['^\s*%\s*' optionName '\s*=*\s*(?<' optionVarName '>[\d\w\.]+)'];
+                tokens=regexp(line,expr,'names');
+                if ~isempty(tokens) && ~isempty(tokens.(optionVarName))
+                    switch optionType
+                        case 'char'
+                            var=tokens.(optionVarName);
+                        case 'double'
+                            var=str2double(tokens.(optionVarName));
+                        otherwise
+                            error(['Conversion of option of type ' optionType ' not implemented']);
+                    end
+                    name=mautogradeFunctionNameJoin(fileName,currentFunctionName);
+                    functionInfo.(name).(optionVarName)=var;
+                    lineParserState='searchingMetadata';
+                    if flagVerbose
+                        fprintf('Found option %s = %s\n', optionName, num2str(var));
+                    end
+                    
                 end
             end
-            %VISIBILITY
-            tokens=regexp(line,'^\s*%\s*VISIBILITY\s*=*\s*(?<visibility>[\w_]+)','names');
-            if ~isempty(tokens) && ~isempty(tokens.visibility)
-                name=mautogradeFunctionNameJoin(fileName,currentFunctionName);
-                functionInfo.(name).visibility=tokens.visibility;
-                lineParserState='searchingMetadata';
-                if flagVerbose
-                    fprintf('Found option VISIBILITY = %s\n', functionInfo.(name).visibility);
-                end
-            end
+            
             if flagVerbose && strcmp(lineParserState,'searchingFunction')
                 fprintf('Found non-option line, transitioning to %s\n', lineParserState);
             end

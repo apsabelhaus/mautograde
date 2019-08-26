@@ -11,20 +11,21 @@ testResultsStruct=struct('name',{testResults.Name});
 for iResult=1:nbResults
     result=testResults(iResult);
     fName=result.Name;
-    %max_score
-    max_score=max(getFieldOrDefault(testInfo, {fName 'score'}, 1),1);
+    %max_score and visibility
+    scoreNormalization=getFieldOrDefault(testInfo, {fName 'scoreNormalization'},1);
+    scoreMax=max(getFieldOrDefault(testInfo, {fName 'scoreMax'}, 1),1);
     visibility=getFieldOrDefault(testInfo, {fName 'visibility'}, 'visible');
     %score
     if ~isnan(result.Score)
-        score=result.Score;
+        score=result.Score/scoreNormalization;
     else
         if result.Passed
-            score=max_score;
+            score=scoreMax;
         else
             score=0;
         end
     end
-    if score>max_score
+    if score>scoreMax
         warning(['Detected score>max_score for test ' fName])
     end
     %output
@@ -48,7 +49,7 @@ for iResult=1:nbResults
     output=strrep([output result.TextOutput],char(10),'\n'); %#ok<CHARTEN>
     
     testResultsStruct(iResult).score=score;
-    testResultsStruct(iResult).max_score=max_score;
+    testResultsStruct(iResult).max_score=scoreMax;
     testResultsStruct(iResult).output=output;
     testResultsStruct(iResult).visibility=visibility;
 end
