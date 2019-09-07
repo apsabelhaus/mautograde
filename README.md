@@ -48,3 +48,5 @@ Used to write tests comparing expected results of functions on given inputs.
 * `mautogradeEnsureCell`: outputs the input as a cell, if it is not already.
 * `mautogradeAppendOutput`: similar to `sprintf`, but appends the formatted output to a given string, using a separator between the two.
 * `mautogradeFunctionNameJoin`: formats a test name from the names of the files and functions.
+* `mautogradeFunctionDescriptionDefault`: generates a default description from the test function name.
+

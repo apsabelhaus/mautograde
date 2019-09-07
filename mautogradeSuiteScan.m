@@ -46,6 +46,7 @@ while ~feof(fid)
                 {'MAX_SCORE','scoreMax','double'}
                 {'MAX_SCORE_BEFORE_NORMALIZATION','scoreNormalization','double'}
                 {'VISIBILITY','visibility','char'}
+                {'DESCRIPTION','description','char'}
                 };
             nbOptionList=length(optionList);
             for iOption=1:nbOptionList
@@ -55,7 +56,7 @@ while ~feof(fid)
                 optionType=option{3};
                 
                 %check for the presence of the option and capture it
-                expr=['^\s*%\s*\<' optionName '\>\s*=*\s*(?<' optionVarName '>[\d\w\.]+)'];
+                expr=['^\s*%\s*\<' optionName '\>\s*=*\s*(?<' optionVarName '>.+)'];
                 tokens=regexp(line,expr,'names');
                 if ~isempty(tokens) && ~isempty(tokens.(optionVarName))
                     switch optionType
