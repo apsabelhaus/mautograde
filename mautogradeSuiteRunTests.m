@@ -3,13 +3,13 @@
 %standard output. If fileName is not the name of a file but it is the name
 %of a directory, look for all the files starting/ending with "test" in that
 %directory, and run tem as mAutograde scripts. If fileName is empty, use
-%the current directory
+%the current directory.
 function mautogradeSuiteRunTests(fileName)
 switch exist(fileName,'file')
     case 2
-        [filepath,scriptName]=fileparts(fileName);
-        if ~isempty(filepath) && ~strcmp(filepath,'.')
-            error('Test file must be in the current directory')
+        [filePath,scriptName]=fileparts(fileName);
+        if ~isempty(filePath) && ~strcmp(filePath,'.')
+            addpath(filePath)
         end
         fileName=[scriptName,'.m'];
         eval(['testResults= ' scriptName '();'])
