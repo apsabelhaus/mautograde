@@ -29,24 +29,40 @@ for iResult=1:nbResults
         warning(['Detected score>max_score for test ' fName])
     end
     %output
-    details=result.Details;
-    if isempty(details)
-        output='';
+    output='';
+    description=getFieldOrDefault(testInfo, {fName 'description'}, '');
+    if isempty(description)
+        %try to get default description from the name
+        description=mautogradeFunctionDescriptionDefault(fName);
+    end
+    if ~isempty(description)
+        output=mautogradeAppendOutput(output,'Description: %s',description);
+    end
+    if score==scoreMax
+        output=mautogradeAppendOutput(output,'Result: Passed');
+    elseif score==0
+        output=mautogradeAppendOutput(output,'Result: Failed');
     else
+        output=mautogradeAppendOutput(output,'Result: Partially failed');
+    end        
+    
+    details=result.Details;
+    if ~isempty(details)
         if isfield(details,'identifier')
             if isempty(details.identifier)
                 id='Error';
             else
                 id=details.identifier;
             end
-            output=mautogradeAppendOutput(id, '%s', details.message);
+            output=mautogradeAppendOutput(output, '%s %s', id, details.message);
         elseif isfield(details,'DiagnosticRecord') && ~isempty(details.DiagonsticRecord.Exception)
             ME=DiagonsticRecord.Exception;
             output=[ME.identifier ' -- ' ME.message];
         end
     end
     
-    output=strrep([output result.TextOutput],char(10),'\n'); %#ok<CHARTEN>
+    output=mautogradeAppendOutput(output, result.TextOutput);
+    output=strrep(output,char(10),'\n'); %#ok<CHARTEN>
     
     testResultsStruct(iResult).score=score;
     testResultsStruct(iResult).max_score=scoreMax;
