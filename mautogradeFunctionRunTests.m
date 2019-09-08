@@ -37,7 +37,8 @@ for iFunction=1:nbFunctions
             rethrow(ME)
         end
     end
-    tests(iFunction).TextOutput=output;
+    %Ensure that output is a string (Octave compatibility)
+    tests(iFunction).TextOutput=char(output);
     tests(iFunction).Duration=toc;
     tests(iFunction).Score=score;
 end
