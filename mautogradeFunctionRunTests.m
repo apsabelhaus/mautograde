@@ -19,12 +19,12 @@ for iFunction=1:nbFunctions
     try
         switch nargout(f)
             case 0
-                f()
+                terminalOutput=evalc('f()');
                 score=NaN;
             case 1
-                score=f();
+                [terminalOutput,score]=evalc('f()');
             case 2
-                [score,output]=f();
+                [terminalOutput,score,output]=evalc('f()');
         end
     catch ME
         if ~flagRethrowNonAssertionErrors || strcmp(ME.identifier,'MATLAB:assertion:failed')
@@ -33,11 +33,13 @@ for iFunction=1:nbFunctions
             tests(iFunction).Failed=1;
             tests(iFunction).Details=struct('identifier',ME.identifier,'message',ME.message);
             output=mautogradeAny2Str(ME.stack);
+            terminalOutput='';
         else
             rethrow(ME)
         end
     end
     %Ensure that output is a string (Octave compatibility)
+    tests(iFunction).TerminalOutput=terminalOutput;
     tests(iFunction).TextOutput=char(output);
     tests(iFunction).Duration=toc;
     tests(iFunction).Score=score;

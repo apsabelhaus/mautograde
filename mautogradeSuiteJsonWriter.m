@@ -62,6 +62,11 @@ for iResult=1:nbResults
     end
     
     output=mautogradeAppendOutput(output, result.TextOutput);
+    if ~isempty(result.TerminalOutput)
+        output=mautogradeAppendOutput(output,...
+            'Terminal output from your function: %s',result.TerminalOutput);
+    end
+       
     output=strrep(output,char(10),'\n'); %#ok<CHARTEN>
     
     testResultsStruct(iResult).score=score;
