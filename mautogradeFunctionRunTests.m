@@ -6,7 +6,7 @@ function tests=mautogradeFunctionRunTests(functions)
 flagRethrowNonAssertionErrors=false;
 
 nbFunctions=length(functions);
-tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',[]),nbFunctions,1);
+tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',''),nbFunctions,1);
 for iFunction=1:nbFunctions
     f=functions{iFunction};
     %get name of calling functions
