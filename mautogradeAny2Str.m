@@ -44,7 +44,7 @@ switch class(s)
         str=mautogradeAppendOutput(str,'endstruct');
     case 'cell'
         cellStr=cellfun(@mautogradeAny2Str,s,'UniformOutput',false);
-        strConcatenation=[];
+        strConcatenation='';
         nbRows=size(cellStr,1);
         for iCol=1:size(cellStr,2)
             strConcatenation=[strConcatenation repmat(' ',nbRows,1)...
