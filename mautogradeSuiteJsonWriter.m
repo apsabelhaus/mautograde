@@ -1,4 +1,5 @@
 function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
+flagIncludeTerminalOutput=false;
 if ~exist('testInfo','var')
     testInfo=[];
 end
@@ -62,7 +63,8 @@ for iResult=1:nbResults
     end
     
     output=mautogradeAppendOutput(output, result.TextOutput);
-    if ~isempty(result.TerminalOutput)
+    
+    if ~isempty(result.TerminalOutput) && flagIncludeTerminalOutput
         output=mautogradeAppendOutput(output,...
             'Terminal output from your function: %s',result.TerminalOutput);
     end
