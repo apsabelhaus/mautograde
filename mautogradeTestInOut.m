@@ -37,14 +37,11 @@ while ivarargin<=length(varargin)
     ivarargin=ivarargin+1;
 end
 
+%replace function handle inputs with actual results
+dataInOut=mautogradeTestInOutProcessInputs(dataInOut);
+
 for iTest=1:nbTests
-    %replace function handle inputs with actual results
-    inputActual=mautogradeEnsureCell(dataInOut(iTest).input);
-    for iInput=1:length(inputActual)
-        if isa(inputActual{iInput},'function_handle')
-            inputActual{iInput}=inputActual{iInput}();
-        end
-    end
+    inputActual=dataInOut(iTest).input;
     %prepare expected outputs
     outputExpected=mautogradeEnsureCell(dataInOut(iTest).output);
     nbOutputs=length(outputExpected);
@@ -52,7 +49,7 @@ for iTest=1:nbTests
     outputActual=cell(1,nbOutputs);
     [outputActual{:}]=fTested(inputActual{:});
     %compare actual and expected outputs
-    if isfield(dataInOut(iTest),'cmp') && ~isempty(mautogradeEnsureCell(dataInOut(iTest).cmp))
+    if isfield(dataInOut(iTest),'cmp') && ~isempty(dataInOut(iTest).cmp)
         cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
         if length(cmp)~=nbOutputs
             cmp(1:nbOutputs)=cmp;
