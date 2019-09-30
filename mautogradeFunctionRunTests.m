@@ -9,22 +9,34 @@ nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',''),nbFunctions,1);
 for iFunction=1:nbFunctions
     f=functions{iFunction};
-    %get name of calling functions
+    %get name of function under test from file name, if possible
     s=dbstack();
-    fName=func2str(f);
-    tests(iFunction).Name=mautogradeFunctionNameJoin(s(2).name,fName);
+    fAutoTestFileName=s(2).name;
+    idxSuffix=regexp(fAutoTestFileName,'_autoTest$');
+    testCase=struct();
+    if ~isempty(idxSuffix)
+        fTestedName=fAutoTestFileName(1:idxSuffix-1);
+        testCase.functionTested=eval(['@' fTestedName]); %#ok<STRNU> %Used in an eval call
+        testCase.functionTestedStr=fTestedName;
+    else
+        fTestedName='';
+    end
+    %get name of calling functions
+    fAutoTestName=func2str(f);
+    fName=mautogradeFunctionNameJoin(fAutoTestFileName,fAutoTestName);
+    tests(iFunction).Name=fName;
     tests(iFunction).Passed=1;
     tic
     output='';
     try
         switch nargout(f)
             case 0
-                terminalOutput=evalc('f()');
+                terminalOutput=evalc('f(testCase)');
                 score=NaN;
             case 1
-                [terminalOutput,score]=evalc('f()');
+                [terminalOutput,score]=evalc('f(testCase)');
             case 2
-                [terminalOutput,score,output]=evalc('f()');
+                [terminalOutput,score,output]=evalc('f(testCase)');
         end
     catch ME
         if ~flagRethrowNonAssertionErrors || strcmp(ME.identifier,'MATLAB:assertion:failed')
