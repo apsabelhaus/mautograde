@@ -1,53 +1,94 @@
-function flag=mautogradeCmpEq(expected, actual)
+function [fractionCorrect,totalItems]=mautogradeCmpEq(expected, actual, varargin)
+flagUseTol=false;       %use tolerance
+flagRawCounts=false;    %recursive call, return raw counts
+
+%optional parameters
+ivarargin=1;
+while ivarargin<=length(varargin)
+    switch lower(varargin{ivarargin})
+        case 'tol'
+            flagUseTol=true;
+            ivarargin=ivarargin+1;
+            tol=varargin{ivarargin};
+        case 'rawcounts'
+            flagRawCounts=true;
+        otherwise
+            error(['Argument ' varargin{ivarargin} ' not valid!'])
+    end
+    ivarargin=ivarargin+1;
+end
+    
 switch class(expected)
-    case {'double', 'char'}
-        flag=cmpSize(expected,actual) && all(expected(:)==actual(:));
+    case 'double'
+        if ~flagUseTol
+            tol=0;
+        end
+        fractionCorrect=cmpSize(expected,actual)*sum(abs(expected(:)-actual(:))<=tol);
+        totalItems=length(expected(:));
+    case {'char','logical'}
+        fractionCorrect=cmpSize(expected,actual)*sum(expected(:)==actual(:));
+        totalItems=length(expected(:));
     case 'struct'
-        flag=cmpStruct(expected,actual);
+        [fractionCorrect,totalItems]=cmpStruct(expected,actual);
     case 'cell'
-        flag=cmpCell(expected,actual);
-    case 'logical'
-        flag=all(expected(:)==actual(:));
+        [fractionCorrect,totalItems]=cmpCell(expected,actual);
     otherwise
         error('Type not supported')
 end
 
-function flag=cmpSize(expected,actual)
-flag=all(size(expected)==size(actual));
-        
-function flag=cmpCell(expected,actual)
-flag=cmpSize(expected,actual);
-if flag
-    for iCell=1:numel(expected)
-        flag=and(flag,mautogradeCmpEq(expected{iCell},actual{iCell}));
-        if ~flag
-            %break early if one of the cells does not match
-            break
-        end
-    end
+if ~flagRawCounts
+    fractionCorrect=fractionCorrect/totalItems;
 end
 
-function flag=cmpStruct(expected, actual)
+function flagDouble=cmpSize(expected,actual)
+flagDouble=double(all(size(expected)==size(actual)));
+
+function [fractionCorrect,totalItems]=cmpCell(expected,actual)
 flag=cmpSize(expected,actual);
-if flag
+fractionCorrect=0;
+if flag>0
+    totalItems=0;
+    for iCell=1:numel(expected)
+        [fractionCorrectCell,totalItemsCell]=...
+            mautogradeCmpEq(expected{iCell},actual{iCell},'rawCounts');
+        fractionCorrect=fractionCorrect+fractionCorrectCell;
+        totalItems=totalItems+totalItemsCell;
+    end
+else
+    totalItems=numel(expected);
+end
+
+function [fractionCorrect,totalItems]=cmpStruct(expected, actual)
+flag=cmpSize(expected,actual);
+fractionCorrect=0;
+if flag>0
+    totalItems=0;
     nbElements=numel(expected);
     if numel(expected)>1
+        %handle arrays by doing recursive call on each (struct) element
         for iElement=1:nbElements
-            flag=and(flag,mautogradeCmpEq(expected(iElement),actual(iElement)));
+            [fractionCorrectCell,totalItemsCell]=...
+                mautogradeCmpEq(expected(iElement),actual(iElement),'rawCounts');
+            fractionCorrect=fractionCorrect+fractionCorrectCell;
+            totalItems=totalItems+totalItemsCell;
         end
     else
         fieldsExpected=fieldnames(expected);
         fieldsActual=fieldnames(actual);
-        flag=cmpCell(fieldsExpected,fieldsActual);
-        if flag
+        flagFields=cmpCell(fieldsExpected,fieldsActual);
+        fractionCorrect=0;
+        if flagFields>0
             for iField=1:numel(fieldsExpected)
                 fieldName=fieldsExpected{iField};
-                flag=and(flag,mautogradeCmpEq(expected.(fieldName),actual.(fieldName)));
-                if ~flag
-                    %break early if one of the fields does not match
-                    break
-                end
+                [fractionCorrectCell,totalItemsCell]=...
+                    mautogradeCmpEq(expected.(fieldName),actual.(fieldName),'rawCounts');
+                fractionCorrect=fractionCorrect+fractionCorrectCell;
+                totalItems=totalItems+totalItemsCell;
             end
+        else
+            totalItems=numel(fieldsExpected);
         end
     end
+else
+    totalItems=numel(expected);
 end
