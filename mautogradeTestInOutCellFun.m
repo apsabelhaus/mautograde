@@ -1,3 +1,5 @@
+%Helper function to run mautogradeTestInOut but applying a cell fun to the actual outputs
+%function [score,outputMsg,flagPassed]=mautogradeTestInOutCellFun(fTested,dataInOut,fOutputCell)
 function [score,outputMsg,flagPassed]=mautogradeTestInOutCellFun(fTested,dataInOut,fOutputCell)
 nbOutputsExpected=length(mautogradeEnsureCell(dataInOut(1).output));
 %decoration of function to output sizes instead of real outputs
