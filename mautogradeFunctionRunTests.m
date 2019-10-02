@@ -16,7 +16,14 @@ for iFunction=1:nbFunctions
     testCase=struct();
     if ~isempty(idxSuffix)
         fTestedName=fAutoTestFileName(1:idxSuffix-1);
-        testCase.functionTested=eval(['@' fTestedName]); %#ok<STRNU> %Used in an eval call
+        try
+            testCase.functionTested=eval(['@' fTestedName]); %#ok<STRNU> %Used in an eval call
+        catch
+            %Octave: we cannot define handle to function that does not exist
+            %In this case, we supply a function that consumes all the
+            %arguments but generates an error
+            testCase.functionTested=@(varargin) mautogradeFunctionNotFound(fTestedName,varargin{:});
+        end
         testCase.functionTestedStr=fTestedName;
     else
         fTestedName='';
