@@ -47,7 +47,12 @@ for iTest=1:nbTests
     nbOutputs=length(outputExpected);
     %get actual outputs by running the function under test
     outputActual=cell(1,nbOutputs);
-    [outputActual{:}]=fTested(inputActual{:});
+    switch class(fTested)
+        case 'function_handle'
+            [outputActual{:}]=fTested(inputActual{:});
+        case 'char'
+            [outputActual{:}]=eval([fTested '(inputActual{:})']);
+    end
     %compare actual and expected outputs
     if isfield(dataInOut(iTest),'cmp') && ~isempty(dataInOut(iTest).cmp)
         cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
