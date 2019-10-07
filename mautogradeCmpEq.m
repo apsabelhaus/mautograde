@@ -23,10 +23,18 @@ switch class(expected)
         if ~flagUseTol
             tol=0;
         end
-        fractionCorrect=cmpSize(expected,actual)*sum(abs(expected(:)-actual(:))<=tol);
+        if cmpSize(expected,actual)
+            fractionCorrect=sum(abs(expected(:)-actual(:))<=tol);
+        else
+            fractionCorrect=0;
+        end
         totalItems=length(expected(:));
     case {'char','logical'}
-        fractionCorrect=cmpSize(expected,actual)*sum(expected(:)==actual(:));
+        if cmpSize(expected,actual)
+            fractionCorrect=sum(expected(:)==actual(:));
+        else
+            fractionCorrect=0;
+        end
         totalItems=length(expected(:));
     case 'struct'
         [fractionCorrect,totalItems]=cmpStruct(expected,actual);
@@ -40,13 +48,13 @@ if ~flagRawCounts
     fractionCorrect=fractionCorrect/totalItems;
 end
 
-function flagDouble=cmpSize(expected,actual)
-flagDouble=double(all(size(expected)==size(actual)));
+function flag=cmpSize(expected,actual)
+flag=all(size(expected)==size(actual));
 
 function [fractionCorrect,totalItems]=cmpCell(expected,actual)
 flag=cmpSize(expected,actual);
 fractionCorrect=0;
-if flag>0
+if flag
     totalItems=0;
     for iCell=1:numel(expected)
         [fractionCorrectCell,totalItemsCell]=...
@@ -61,7 +69,7 @@ end
 function [fractionCorrect,totalItems]=cmpStruct(expected, actual)
 flag=cmpSize(expected,actual);
 fractionCorrect=0;
-if flag>0
+if flag
     totalItems=0;
     nbElements=numel(expected);
     if numel(expected)>1
