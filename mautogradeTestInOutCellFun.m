@@ -11,7 +11,7 @@ end
 %call the test input-output test function. We need to explicitly specify
 %the number of outputs because it cannot be detected 
 [score,outputMsg,flagPassed]=mautogradeTestInOut(fTestedWrap,dataInOut,...
-    'fname',func2str(fTested));
+    'fname',mautogradeEnsureChar(fTested));
 
 function varargout=outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin)
 output=cell(1,nbOutputsExpected);

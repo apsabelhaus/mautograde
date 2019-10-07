@@ -27,10 +27,7 @@ for iFunction=1:nbFunctions
         testCase.functionTestedStr=fTestedName; %#ok<STRNU>: we use testCase in evals
     end
     %get name of calling functions
-    fAutoTestName=f;
-    if isa(fAutoTestName,'function_handle')
-        fAutoTestName=func2str(f);
-    end
+    fAutoTestName=mautogradeEnsureChar(f);
     fName=mautogradeFunctionNameJoin(fAutoTestFileName,fAutoTestName);
     tests(iFunction).Name=fName;
     tests(iFunction).Passed=1;

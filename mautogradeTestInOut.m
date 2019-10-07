@@ -22,7 +22,7 @@ nbTests=length(dataInOut);
 score=0;
 outputMsg='';
 flagPassed=true;
-fTestedName=func2str(fTested);
+fTestedName=mautogradeEnsureChar(fTested);
 
 %optional parameters
 ivarargin=1;

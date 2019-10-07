@@ -47,7 +47,7 @@ for iTest=1:nbTests
     dataInOut(iTest).output=fTesting(dataInOut(iTest).input{:});
 end
 if nargout==0 || fileSaveFlag
-    fileName=fullfile(fileSaveDir,[func2str(fTesting) '_autoTestData']);
+    fileName=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTestData']);
     disp(['Saving to ' fileName])
     save(fileName, 'dataInOut')
 end
