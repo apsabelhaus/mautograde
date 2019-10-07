@@ -52,6 +52,8 @@ for iTest=1:nbTests
             [outputActual{:}]=fTested(inputActual{:});
         case 'char'
             [outputActual{:}]=eval([fTested '(inputActual{:})']);
+        otherwise
+            error('Handling of class of fTested not implemented');
     end
     %compare actual and expected outputs
     if isfield(dataInOut(iTest),'cmp') && ~isempty(dataInOut(iTest).cmp)

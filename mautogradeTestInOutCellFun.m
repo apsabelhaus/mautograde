@@ -16,4 +16,12 @@ end
 function varargout=outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin)
 output=cell(1,nbOutputsExpected);
 [output{:}]=fTested(varargin{:});
-varargout=cellfun(fOutputCell,output,'UniformOutput',false);
+switch class(fTested)
+    case 'function_handle'
+        varargout=cellfun(fOutputCell,output,'UniformOutput',false);
+    case 'char'
+        varargout=eval(['cellfun(' fOutputCell ',output,''UniformOutput'',false)']);
+    otherwise
+        error('Handling of class of fTested not implemented');
+end
+        
