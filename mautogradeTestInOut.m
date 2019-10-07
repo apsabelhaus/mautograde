@@ -60,8 +60,15 @@ for iTest=1:nbTests
     end
     for iOutput=1:nbOutputs
         fEqual=cmp{iOutput};
-        flagOutputEquivalent=fEqual(outputActual{iOutput},outputExpected{iOutput});
-        if flagOutputEquivalent
+        %allow different types of equality functions (one or two arguments)
+        switch nargout(fEqual)
+            case 1
+                fractionEquivalent=double(fEqual(outputActual{iOutput},outputExpected{iOutput}));
+                totalItems=1;
+            case 2
+                [fractionEquivalent,totalItems]=fEqual(outputActual{iOutput},outputExpected{iOutput});
+        end
+        if fractionEquivalent==totalItems
             score=score+1;
         else
             flagPassed=false;
