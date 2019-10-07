@@ -18,7 +18,7 @@ for iFunction=1:nbFunctions
         fTestedName=fAutoTestFileName(1:idxSuffix-1);
         try
             testCase.functionTested=eval(['@' fTestedName]); %#ok<STRNU> %Used in an eval call
-        catch
+        catch ME
             %Octave: we cannot define handle to function that does not exist
             %In this case, we supply a function that consumes all the
             %arguments but generates an error
