@@ -43,13 +43,25 @@ end
 dataInOut=mautogradeTestInOutProcessInputs(dataIn);
 
 nbTests=length(dataInOut);
+nbOutputs=nargout(fTesting);
 for iTest=1:nbTests
-    dataInOut(iTest).output=fTesting(dataInOut(iTest).input{:});
+    dataInOut(iTest).output=cell(1,nbOutputs);
+    [dataInOut(iTest).output{:}]=fTesting(dataInOut(iTest).input{:});
 end
 if nargout==0 || fileSaveFlag
     fileName=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTestData']);
     disp(['Saving to ' fileName])
     save(fileName, 'dataInOut')
+    fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest']);
+    cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
+    fprintf('To run the test, try\n\t%s\n', cmdMatlab)
+    if ismac
+        cmd=['echo "' cmdMatlab '" | pbcopy'];
+        out=system(cmd);
+        if out==0
+            disp('or paste the command from the clipboard')
+        end
+    end
 end
 if nargout>0
     varargout{1}=dataInOut;
