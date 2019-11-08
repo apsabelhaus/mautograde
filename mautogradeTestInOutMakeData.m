@@ -48,19 +48,41 @@ for iTest=1:nbTests
     dataInOut(iTest).output=cell(1,nbOutputs);
     [dataInOut(iTest).output{:}]=fTesting(dataInOut(iTest).input{:});
 end
+
+%prepare data for dimensions
+dataInOutDimensions=mautogradeTestInOutMakeDataDimensions(dataInOut);
+dataInOutTypes=mautogradeTestInOutMakeDataTypes(dataInOut);
+
 if nargout==0 || fileSaveFlag
     fileName=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTestData']);
-    disp(['Saving to ' fileName])
-    save(fileName, 'dataInOut')
-    fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest']);
-    cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
-    fprintf('To run the test, try\n\t%s\n', cmdMatlab)
-    if ismac
-        cmd=['echo "' cmdMatlab '" | pbcopy'];
-        out=system(cmd);
-        if out==0
-            disp('or paste the command from the clipboard')
+    fprintf('Saving %d test items to %s\n', nbTests, fileName)
+    save(fileName, 'dataInOut','dataInOutDimensions','dataInOutTypes')
+    
+    %finish preparing autoTest file
+    fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest.m']);
+    if exist(fileNameTest,'file')
+        % update the normalization score
+        optionList=mautogradeOptionList();
+        expr=['(' mautogradeOptionBaseRegexp(optionList{2}{1}) ')(\d*)'];
+        maxScoreBeforeNormalization=sum(cellfun(@length,{dataInOut.output}));
+        repl=['$1' num2str(maxScoreBeforeNormalization)];
+        nbMatches=mautogradeRegexpReplaceInFile(fileNameTest,expr,repl);
+        if nbMatches==0
+            warning([mfilename ':matchNotFound'],'No MAX_SCORE_BEFORE_NORMALIZATION found in the autoTest file.')
+        else
+            fprintf('Updated  MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.')
         end
+        cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
+        fprintf('To run the autoTest, try\n\t%s\n', cmdMatlab)
+        if ismac
+            cmd=['echo "' cmdMatlab '" | pbcopy'];
+            out=system(cmd);
+            if out==0
+                disp('or paste the command from the clipboard')
+            end
+        end
+    else
+        warning([mfilename ':testNotFound'],['Test file ' fileNameTest ' not found'])
     end
 end
 if nargout>0
