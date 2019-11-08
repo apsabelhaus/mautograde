@@ -53,12 +53,8 @@ while ~feof(fid)
             %to searching functions
             lineParserState='searchingFunction';
             %Check for various types of metadata, and capture if so
-            optionList={
-                {'MAX_SCORE','scoreMax','double'}
-                {'MAX_SCORE_BEFORE_NORMALIZATION','scoreNormalization','double'}
-                {'VISIBILITY','visibility','char'}
-                {'DESCRIPTION','description','char'}
-                };
+            optionList=mautogradeOptionList();
+            
             nbOptionList=length(optionList);
             for iOption=1:nbOptionList
                 option=optionList{iOption};
@@ -67,7 +63,7 @@ while ~feof(fid)
                 optionType=option{3};
                 
                 %check for the presence of the option and capture it
-                expr=['^\s*%\s*\<' optionName '\>\s*=*\s*(?<' optionVarName '>.+)'];
+                expr=[mautogradeOptionBaseRegexp(optionName) '(?<' optionVarName '>.+)'];
                 tokens=regexp(line,expr,'names');
                 if ~isempty(tokens) && ~isempty(tokens.(optionVarName))
                     switch optionType

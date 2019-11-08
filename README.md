@@ -21,8 +21,9 @@ You can run a test suite (group of tests) using the command `mautogradeSuiteRunT
 * A directory, the script will look for all the `.m` files starting or ending with the word `test` (case insensitive). The results from all tests in all such files will be concatenated.
 The results of the test are produced on the standard output using the JSON format; see https://gradescope-autograders.readthedocs.io/en/latest/specs/ for details on the output content. The output intended to be redirected to the `result.json` file used by Gradescope, as done in the provided `run_autograder` BASH script.
 
-# Known limitations
-The framework does not support setup/tear-down of test fixtures.
+# Known bugs and limitations
+- The framework does not support setup/tear-down of test fixtures.
+- The function mautogradeCmpEq does not work correctly for values such as Inf and Nan when a comparison tolerance is specified.
 
 # mAutograde base files and development notes
 The `.m` files contain Octave/Matlab functions to run simple tests, collect the results, and write them to standard output.
@@ -49,4 +50,6 @@ Used to write tests comparing expected results of functions on given inputs.
 * `mautogradeAppendOutput`: similar to `sprintf`, but appends the formatted output to a given string, using a separator between the two.
 * `mautogradeFunctionNameJoin`: formats a test name from the names of the files and functions.
 * `mautogradeFunctionDescriptionDefault`: generates a default description from the test function name.
+* `mautogradeOptionList` and `mautogradeOptionBaseRegexp`: returns the list of options and the regexp used to match them in SuiteScan.
+
 
