@@ -1,6 +1,23 @@
+%Count how many elments in actual are the same as expected
+%function [fractionCorrect,totalItems]=mautogradeCmpEq(expected, actual, varargin)
+%Note: For composite types (e.g., arrays, cell arrays, structs), equality is tested on
+%individual elements or fields, counting each one of them as a separate
+%element, with this rule applied recursively until a fundamental type is
+%encountered.
+%Inputs
+%   expected, actual: arrays or cell arrays to compare
+%Outputs
+%   fractionCorrect     fraction (between 0 and 1) of how many element coincide
+%   totalItems          total numbe of items compared
+%Optional inputs
+%   'tol',tol           for elements of type double, check equality with
+%                       tolerance tol
+%   'shiftdim'          for elements of type double, apply shiftdim before
+%                       comparing
 function [fractionCorrect,totalItems]=mautogradeCmpEq(expected, actual, varargin)
 flagUseTol=false;       %use tolerance
-flagRawCounts=false;    %recursive call, return raw counts
+flagRawCounts=false;    %return raw counts (useful for recursive calls)
+flagShiftDim=false;
 
 %optional parameters
 ivarargin=1;
@@ -10,6 +27,8 @@ while ivarargin<=length(varargin)
             flagUseTol=true;
             ivarargin=ivarargin+1;
             tol=varargin{ivarargin};
+        case 'shiftdim'
+            flagShiftDim=true;
         case 'rawcounts'
             flagRawCounts=true;
         otherwise
@@ -22,6 +41,10 @@ switch class(expected)
     case 'double'
         if ~flagUseTol
             tol=0;
+        end
+        if flagShiftDim
+            expected=shiftdim(expected);
+            actual=shiftdim(actual);
         end
         if cmpSize(expected,actual)
             fractionCorrect=sum(abs(expected(:)-actual(:))<=tol);
@@ -37,9 +60,9 @@ switch class(expected)
         end
         totalItems=length(expected(:));
     case 'struct'
-        [fractionCorrect,totalItems]=cmpStruct(expected,actual);
+        [fractionCorrect,totalItems]=cmpStruct(expected,actual,varargin{:});
     case 'cell'
-        [fractionCorrect,totalItems]=cmpCell(expected,actual);
+        [fractionCorrect,totalItems]=cmpCell(expected,actual,varargin{:});
     otherwise
         error('Type not supported')
 end
@@ -51,14 +74,14 @@ end
 function flag=cmpSize(expected,actual)
 flag=all(size(expected)==size(actual));
 
-function [fractionCorrect,totalItems]=cmpCell(expected,actual)
+function [fractionCorrect,totalItems]=cmpCell(expected,actual,varargin)
 flag=cmpSize(expected,actual);
 fractionCorrect=0;
 if flag
     totalItems=0;
     for iCell=1:numel(expected)
         [fractionCorrectCell,totalItemsCell]=...
-            mautogradeCmpEq(expected{iCell},actual{iCell},'rawCounts');
+            mautogradeCmpEq(expected{iCell},actual{iCell},'rawCounts',varargin{:});
         fractionCorrect=fractionCorrect+fractionCorrectCell;
         totalItems=totalItems+totalItemsCell;
     end
@@ -66,7 +89,7 @@ else
     totalItems=numel(expected);
 end
 
-function [fractionCorrect,totalItems]=cmpStruct(expected, actual)
+function [fractionCorrect,totalItems]=cmpStruct(expected, actual,varargin)
 flag=cmpSize(expected,actual);
 fractionCorrect=0;
 if flag
@@ -76,7 +99,7 @@ if flag
         %handle arrays by doing recursive call on each (struct) element
         for iElement=1:nbElements
             [fractionCorrectCell,totalItemsCell]=...
-                mautogradeCmpEq(expected(iElement),actual(iElement),'rawCounts');
+                mautogradeCmpEq(expected(iElement),actual(iElement),'rawCounts',varargin{:});
             fractionCorrect=fractionCorrect+fractionCorrectCell;
             totalItems=totalItems+totalItemsCell;
         end
@@ -89,7 +112,7 @@ if flag
             for iField=1:numel(fieldsExpected)
                 fieldName=fieldsExpected{iField};
                 [fractionCorrectCell,totalItemsCell]=...
-                    mautogradeCmpEq(expected.(fieldName),actual.(fieldName),'rawCounts');
+                    mautogradeCmpEq(expected.(fieldName),actual.(fieldName),'rawCounts',varargin{:});
                 fractionCorrect=fractionCorrect+fractionCorrectCell;
                 totalItems=totalItems+totalItemsCell;
             end
