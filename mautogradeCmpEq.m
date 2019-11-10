@@ -4,6 +4,7 @@
 %individual elements or fields, counting each one of them as a separate
 %element, with this rule applied recursively until a fundamental type is
 %encountered.
+%Known limitation: Handling of Inf and NaN's might be incorrect
 %Inputs
 %   expected, actual: arrays or cell arrays to compare
 %Outputs
@@ -14,10 +15,13 @@
 %                       tolerance tol
 %   'shiftdim'          for elements of type double, apply shiftdim before
 %                       comparing
+%   'NaNWildcard'       for doubles, expected entries marked with NaN will
+%                       match any actual value
 function [fractionCorrect,totalItems]=mautogradeCmpEq(expected, actual, varargin)
 flagUseTol=false;       %use tolerance
 flagRawCounts=false;    %return raw counts (useful for recursive calls)
 flagShiftDim=false;
+flagNaNWildcard=true;
 
 %optional parameters
 ivarargin=1;
@@ -31,6 +35,8 @@ while ivarargin<=length(varargin)
             flagShiftDim=true;
         case 'rawcounts'
             flagRawCounts=true;
+        case 'nanwildcard'
+            flagNaNWildcard=true;
         otherwise
             error(['Argument ' varargin{ivarargin} ' not valid!'])
     end
@@ -41,6 +47,11 @@ switch class(expected)
     case 'double'
         if ~flagUseTol
             tol=0;
+        end
+        if flagNaNWildcard
+            flagExpectedIsNaN=isnan(expected);
+            expected=expected(~flagExpectedIsNaN);
+            actual=actual(~flagExpectedIsNaN);
         end
         if flagShiftDim
             expected=shiftdim(expected);
