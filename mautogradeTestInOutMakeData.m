@@ -22,6 +22,9 @@
 function varargout=mautogradeTestInOutMakeData(fTesting,dataIn,varargin)
 fileSaveDir='.';
 fileSaveFlag=false;
+fileSaveName=mautogradeEnsureChar(fTesting);
+flagFileSaveCustom=false;
+flagNbOutputsProvided=false;
 
 %optional parameters
 ivarargin=1;
@@ -30,9 +33,17 @@ while ivarargin<=length(varargin)
         case 'filesavedir'
             ivarargin=ivarargin+1;
             fileSaveDir=varargin{ivarargin};
+        case 'filesavename'
+            flagFileSaveCustom=true;
+            ivarargin=ivarargin+1;
+            fileSaveName=varargin{ivarargin};
         case 'filesaveflag'
             ivarargin=ivarargin+1;
             fileSaveFlag=varargin{ivarargin};
+        case 'nboutputs'
+            flagNbOutputsProvided=true;
+            ivarargin=ivarargin+1;
+            nbOutputs=varargin{ivarargin};
         otherwise
             error(['Argument ' varargin{ivarargin} ' not valid!'])
     end
@@ -43,7 +54,15 @@ end
 dataInOut=mautogradeTestInOutProcessInputs(dataIn);
 
 nbTests=length(dataInOut);
-nbOutputs=nargout(fTesting);
+if ~flagNbOutputsProvided
+    nbOutputs=nargout(fTesting);
+end
+if nbOutputs<=0
+    error(['The function under test has no output or it is anonymous, '...
+        'in which case the automatic detection of the number of outputs ' ...
+        'with nargout does not work; '...
+        'for the latter, use the ''nbOutputs'' option' ])
+end
 for iTest=1:nbTests
     dataInOut(iTest).output=cell(1,nbOutputs);
     [dataInOut(iTest).output{:}]=fTesting(dataInOut(iTest).input{:});
@@ -54,35 +73,37 @@ dataInOutDimensions=mautogradeTestInOutMakeDataDimensions(dataInOut);
 dataInOutTypes=mautogradeTestInOutMakeDataTypes(dataInOut);
 
 if nargout==0 || fileSaveFlag
-    fileName=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTestData']);
+    fileName=fullfile(fileSaveDir, [fileSaveName '_autoTestData']);
     fprintf('Saving %d test items to %s\n', nbTests, fileName)
     save(fileName, 'dataInOut','dataInOutDimensions','dataInOutTypes')
     
-    %finish preparing autoTest file
-    fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest.m']);
-    if exist(fileNameTest,'file')
-        % update the normalization score
-        optionList=mautogradeOptionList();
-        expr=['(' mautogradeOptionBaseRegexp(optionList{2}{1}) ')(\d*)'];
-        maxScoreBeforeNormalization=sum(cellfun(@length,{dataInOut.output}));
-        repl=['$1' num2str(maxScoreBeforeNormalization)];
-        nbMatches=mautogradeRegexpReplaceInFile(fileNameTest,expr,repl);
-        if nbMatches==0
-            warning([mfilename ':matchNotFound'],'No MAX_SCORE_BEFORE_NORMALIZATION found in the autoTest file.')
-        else
-            fprintf('Updated  MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.')
-        end
-        cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
-        fprintf('To run the autoTest, try\n\t%s\n', cmdMatlab)
-        if ismac
-            cmd=['echo "' cmdMatlab '" | pbcopy'];
-            out=system(cmd);
-            if out==0
-                disp('or paste the command from the clipboard')
+    if ~flagFileSaveCustom
+        %finish preparing autoTest file
+        fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest.m']);
+        if exist(fileNameTest,'file')
+            % update the normalization score
+            optionList=mautogradeOptionList();
+            expr=['(' mautogradeOptionBaseRegexp(optionList{2}{1}) ')(\d*)'];
+            maxScoreBeforeNormalization=sum(cellfun(@length,{dataInOut.output}));
+            repl=['$1' num2str(maxScoreBeforeNormalization)];
+            nbMatches=mautogradeRegexpReplaceInFile(fileNameTest,expr,repl);
+            if nbMatches==0
+                warning([mfilename ':matchNotFound'],'No MAX_SCORE_BEFORE_NORMALIZATION found in the autoTest file.')
+            else
+                fprintf('Updated  MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.')
             end
+            cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
+            fprintf('To run the autoTest, try\n\t%s\n', cmdMatlab)
+            if ismac
+                cmd=['echo "' cmdMatlab '" | pbcopy'];
+                out=system(cmd);
+                if out==0
+                    disp('or paste the command from the clipboard')
+                end
+            end
+        else
+            warning([mfilename ':testNotFound'],['Test file ' fileNameTest ' not found'])
         end
-    else
-        warning([mfilename ':testNotFound'],['Test file ' fileNameTest ' not found'])
     end
 end
 if nargout>0

@@ -45,6 +45,9 @@ for iTest=1:nbTests
     %prepare expected outputs
     outputExpected=mautogradeEnsureCell(dataInOut(iTest).output);
     nbOutputs=length(outputExpected);
+    if nbOutputs==0
+        error('The expected number of outputs is zero, there is nothing to compare')
+    end
     %get actual outputs by running the function under test
     outputActual=cell(1,nbOutputs);
     switch class(fTested)
@@ -67,7 +70,7 @@ for iTest=1:nbTests
     end
     for iOutput=1:nbOutputs
         fEqual=cmp{iOutput};
-        fractionEquivalent=double(fEqual(outputActual{iOutput},outputExpected{iOutput}));
+        fractionEquivalent=double(fEqual(outputExpected{iOutput},outputActual{iOutput}));
         score=score+fractionEquivalent;
         if fractionEquivalent<1
             flagPassed=false;
