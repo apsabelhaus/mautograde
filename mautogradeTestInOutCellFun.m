@@ -6,6 +6,11 @@ nbOutputsExpected=length(mautogradeEnsureCell(dataInOut(1).output));
 fTestedWrap=@(varargin) outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin{:}); 
 %setup comparison function
 for iData=1:length(dataInOut)
+    %if there is already a comparison function (for the original data),
+    %clear it
+    if isfield(dataInOut,'cmp')
+        dataInOut(iData).cmp=cell(1,nbOutputsExpected);
+    end
     [dataInOut(iData).cmp{1:nbOutputsExpected}]=deal(@mautogradeCmpEq);
 end
 %call the test input-output test function. We need to explicitly specify
