@@ -13,7 +13,7 @@ end
 
 % Read the entire file with lines in a cell array
 fid=fopen(fileName); 
-text=textscan(fid,'%s','Delimiter','');
+text=textscan(fid,'%s','Delimiter','','Whitespace','');
 text=text{1};
 fclose(fid);
 
