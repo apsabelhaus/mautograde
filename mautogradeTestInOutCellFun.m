@@ -5,13 +5,10 @@ nbOutputsExpected=length(mautogradeEnsureCell(dataInOut(1).output));
 %decoration of function to output sizes instead of real outputs
 fTestedWrap=@(varargin) outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin{:}); 
 %setup comparison function
-for iData=1:length(dataInOut)
-    %if there is already a comparison function (for the original data),
-    %clear it
-    if isfield(dataInOut,'cmp')
-        dataInOut(iData).cmp=cell(1,nbOutputsExpected);
+if ~isfield(dataInOut,'cmp')
+    for iData=1:length(dataInOut)
+        [dataInOut(iData).cmp{1:nbOutputsExpected}]=deal(@mautogradeCmpEq);
     end
-    [dataInOut(iData).cmp{1:nbOutputsExpected}]=deal(@mautogradeCmpEq);
 end
 %call the test input-output test function. We need to explicitly specify
 %the number of outputs because it cannot be detected 
