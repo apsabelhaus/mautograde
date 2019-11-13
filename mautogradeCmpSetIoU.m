@@ -38,8 +38,13 @@ if ~isCellTypeCompatible(expected) || ~isCellTypeCompatible(actual)
     end
 end
 
-totalItems=length(expected);
-fractionCorrect=length(intersect(expected,actual))/length(union(expected,actual));
+if isempty(expected) && isempty(actual)
+    totalItems=1;
+    fractionCorrect=1;
+else
+    totalItems=length(expected);
+    fractionCorrect=length(intersect(expected,actual))/length(union(expected,actual));
+end
 
 if flagRawCounts
     fractionCorrect=fractionCorrect*totalItems;
