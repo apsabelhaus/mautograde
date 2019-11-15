@@ -68,8 +68,10 @@ for iResult=1:nbResults
         output=mautogradeAppendOutput(output,...
             'Terminal output from your function: %s',result.TerminalOutput);
     end
-       
+    
+    %escape newlines and other special characters
     output=strrep(output,char(10),'\n'); %#ok<CHARTEN>
+    output=strrep(output,'"','``');
     
     testResultsStruct(iResult).score=score;
     testResultsStruct(iResult).max_score=scoreMax;
