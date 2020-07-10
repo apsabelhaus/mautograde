@@ -2,7 +2,7 @@
 
 # Get common setup variables (repository information)
 cd /autograder/source
-source setup_variables
+source setup_variables.sh
 
 # Set up autograder files
 SOURCE_DIR="${AUTOGRADER_DIR}/source"

@@ -2,7 +2,7 @@
 
 #Variables to change to match your setup
 GIT_HOST="bitbucket.org" #change to github.com if using GitHub
-GIT_REPO="git@bitbucket.org:tronroberto/mautogradeexampletests.git"
+GIT_REPO="git@$GIT_HOST:tronroberto/mautogradeexampletests.git"
 
 # Gradescope setup
 AUTOGRADER_DIR="/autograder"
