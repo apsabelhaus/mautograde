@@ -1,12 +1,15 @@
 %function mautogradeRunTests(fileName)
 %Run the mAutograde test script in fileName.m, then write the results to
-%standard output. If fileName is not the name of a file but it is the name
-%of a directory, look for all the files starting/ending with "test" in that
-%directory, and run tem as mAutograde scripts. If fileName is empty, use
-%the current directory.
+%standard output. 
+%Inputs
+%   fileName    name of the test suite file. If fileName is not the name of
+%       a file but it is the name of a directory, look for all the files
+%       starting/ending with "test" in that directory, and run tem as
+%       mAutograde scripts. If fileName is empty, use the current directory.
 function mautogradeSuiteRunTests(fileName)
 switch exist(fileName,'file')
     case 2
+        %fileName is an actual .m file
         [filePath,scriptName]=fileparts(fileName);
         if ~isempty(filePath) && ~strcmp(filePath,'.')
             addpath(filePath)
@@ -16,6 +19,7 @@ switch exist(fileName,'file')
         testInfo=mautogradeSuiteScan(fileName);
         mautogradeSuiteJsonWriter(testResults,testInfo)
     case 7
+        %fileName is a directory
         testFileNames=getTestFileList(fileName);
         addpath(fileName)
         testResults=[];

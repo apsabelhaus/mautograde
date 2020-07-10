@@ -1,10 +1,14 @@
-%function jsonTinyStructWriter(fid,s)
+%A limited function to write a variable as JSON into a file
+%function mautogradeJsonWriter(fid,s)
 %Recursively writes the contents of the variable s to the given file id
 %using JSON syntax
 %Notes: 
 %   1. only some types of variables are supported (structs, arrays, double,
 %       strings). 
 %   2. arrays are flattened to linear arrays
+%Inputs
+%   fid     file id for writing (use 1 for terminal)
+%   s       MATLAB variable to be written to JSON
 function mautogradeJsonWriter(fid,s,indentation)
 if ~exist('indentation','var')
     indentation='';

@@ -1,3 +1,10 @@
+%Write the results of a test suite to a Gradescope-compatible JSON file
+%function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
+%Inputs
+%   testResults     Results from mautogradeSuiteRunTests()
+%   testInfo        Results from mautogradeSuiteScan()
+%   flagWriteFile   (default true)  If true, write to a 'results.json'
+%       file, otherwise, output to terminal
 function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
 flagIncludeTerminalOutput=false;
 if ~exist('testInfo','var')
@@ -37,14 +44,14 @@ for iResult=1:nbResults
         description=mautogradeFunctionDescriptionDefault(fName);
     end
     if ~isempty(description)
-        output=mautogradeAppendOutput(output,'Description: %s',description);
+        output=mautogradeOutputAppend(output,'Description: %s',description);
     end
     if score==scoreMax
-        output=mautogradeAppendOutput(output,'Result: Passed');
+        output=mautogradeOutputAppend(output,'Result: Passed');
     elseif score==0
-        output=mautogradeAppendOutput(output,'Result: Failed');
+        output=mautogradeOutputAppend(output,'Result: Failed');
     else
-        output=mautogradeAppendOutput(output,'Result: Partially failed');
+        output=mautogradeOutputAppend(output,'Result: Partially failed');
     end        
     
     details=result.Details;
@@ -55,17 +62,17 @@ for iResult=1:nbResults
             else
                 id=details.identifier;
             end
-            output=mautogradeAppendOutput(output, '%s %s', id, details.message);
+            output=mautogradeOutputAppend(output, '%s %s', id, details.message);
         elseif isfield(details,'DiagnosticRecord') && ~isempty(details.DiagonsticRecord.Exception)
             ME=DiagonsticRecord.Exception;
             output=[ME.identifier ' -- ' ME.message];
         end
     end
     
-    output=mautogradeAppendOutput(output, result.TextOutput);
+    output=mautogradeOutputAppend(output, result.TextOutput);
     
     if ~isempty(result.TerminalOutput) && flagIncludeTerminalOutput
-        output=mautogradeAppendOutput(output,...
+        output=mautogradeOutputAppend(output,...
             'Terminal output from your function: %s',result.TerminalOutput);
     end
     

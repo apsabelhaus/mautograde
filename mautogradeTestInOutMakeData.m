@@ -22,7 +22,7 @@
 function varargout=mautogradeTestInOutMakeData(fTesting,dataIn,varargin)
 fileSaveDir='.';
 fileSaveFlag=false;
-fileSaveName=mautogradeEnsureChar(fTesting);
+fileSaveName=mautogradeAny2Str(fTesting,'minimal');
 flagFileSaveCustom=false;
 flagNbOutputsProvided=false;
 
@@ -79,7 +79,7 @@ if nargout==0 || fileSaveFlag
     
     if ~flagFileSaveCustom
         %finish preparing autoTest file
-        fileNameTest=fullfile(fileSaveDir,[mautogradeEnsureChar(fTesting) '_autoTest.m']);
+        fileNameTest=fullfile(fileSaveDir,[mautogradeAny2Str(fTesting,'minimal') '_autoTest.m']);
         if exist(fileNameTest,'file')
             % update the normalization score
             optionList=mautogradeOptionList();

@@ -7,8 +7,13 @@
 %mautogradeAny2Str) before comparison.
 %Inputs
 %   expected, actual: arrays or cell arrays to compare
+%Optional inputs
+%   'rawCounts'         fractionCorrect returns the actual number of
+%                       coinciding elements instead of a fraction between 0
+%                       and 1 
 %Outputs
-%   fractionCorrect     fraction (between 0 and 1) of how many element coincide
+%   fractionCorrect     fraction (between 0 and 1) or actual count (with
+%                       'rawCounts' option) of how many element coincide 
 %   totalItems          total numbe of items in the expected collection
 function [fractionCorrect,totalItems]=mautogradeCmpSetIoU(expected, actual, varargin)
 flagRawCounts=false;

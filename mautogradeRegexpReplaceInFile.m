@@ -1,5 +1,7 @@
 %Run regexprep on a file instead of a string
 %function nbMatches=mautogradeRegexpReplaceInFile(fileName, varargin)
+%Useful for functions that build test suites from templates, e.g., see
+%mautogradeTestInOutMakeData. 
 %Inputs
 %   fileName    name of the file on which to perform the search and replace
 %   varargin    these arguments are passed to regexprep

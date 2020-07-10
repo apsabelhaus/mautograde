@@ -1,14 +1,23 @@
-%Generate default description of test from its name
+%Generate default description of a test from its name via regexp match
 %function description=mautogradeFunctionDescriptionDefault(fName)
+%Run
+%   mautogradeFunctionDescriptionDefault -help
+%to get a list of regular expressions and the corresponding descriptions
 function description=mautogradeFunctionDescriptionDefault(fName)
 description='';
-if regexp(fName,'_dimensions$')
-    description='Check that the dimensions of each output are as expected for typical inputs';
-end
-if regexp(fName,'_types$')
-    description='Check that the types of each output are as expected for typical inputs';
-end
-if regexp(fName,'_inOut$')
-    description='Check outputs for some fixed random inputs';
+regexpPairs={
+    {'_dimensions$','Check that the dimensions of each output are as expected for typical inputs'}
+    {'_types$','Check that the types of each output are as expected for typical inputs'}
+    {'_inOut$','Check outputs for some fixed random inputs'}
+    };
+
+if strcmpi(fName,'-help')
+    disp(mautogradeAny2Str(regexpPairs))
+else
+    for iRegexp=1:length(regexpPairs)
+        if regexp(fName,regexpPairs{iRegexp}{1})
+            description=regexpPairs{iRegexp}{2};
+        end
+    end
 end
 

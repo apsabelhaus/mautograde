@@ -1,3 +1,6 @@
+%Transform a 2-D char array into a multiline string
+%function str=mautogradeChar2Multiline(charArray)
+%Uses Line Feed (char(10)) for separating lines
 function str=mautogradeChar2Multiline(charArray)
 nbStrings=size(charArray,1);
 switch nbStrings
