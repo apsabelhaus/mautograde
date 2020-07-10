@@ -1,3 +1,5 @@
+git setup_ssh.sh
+
 # Set Git identity (placeholder)
 git config --global user.email "autograder@placeholder.org"
 git config --global user.name "Gradescope Autograder"

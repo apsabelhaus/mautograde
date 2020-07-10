@@ -4,8 +4,8 @@ AUTOGRADER_ZIP=autograder.zip
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
-zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup.sh setup_variables.sh ssh_config_template
+zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template
 
-source setup_variables
+source setup_variables.sh
 echo $0: Remember to change the repository sub-dir in setup_variables_testdir if necessary
 echo $0: Current value for MAUTOGRADE_TESTS_DIR is $MAUTOGRADE_TESTS_DIR

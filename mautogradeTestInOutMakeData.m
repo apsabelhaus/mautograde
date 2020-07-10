@@ -12,7 +12,7 @@
 %   'fileSaveFlag',flag     Enable or disable file saving
 %Outputs
 %   dataInOut   Struct derived from dataIn that can be used with
-%       mautogradeTestInOut)
+%       mautogradeTestInOut()
 %If dataInOut is not assigned, the results are saved to a file.
 %Saving files
 %If enabled (either through the use of flags, specifying a directory, or
