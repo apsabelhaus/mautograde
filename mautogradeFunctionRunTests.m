@@ -55,6 +55,7 @@ for iFunction=1:nbFunctions
     idxSuffix=regexp(fAutoTestFileName,'_autoTest$');
     if ~isempty(idxSuffix)
         fTestedName=fAutoTestFileName(1:idxSuffix-1);
+        testCase.functionTestedFileName=which(fTestedName);
         try
             testCase.functionTested=eval(['@' fTestedName]); %
         catch
