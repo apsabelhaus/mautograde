@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 CVX_DIR="${AUTOGRADER_DIR}/toolbox/cvx"
+rm -rf ${CVX_DIR}/*
 mkdir -p ${CVX_DIR}
 
 sudo apt-get install libopenblas-dev liboctave-dev
 
-git clone -b rework https://github.com/cvxr/CVX.git/
+git clone -b rework https://github.com/cvxr/CVX.git/ ${CVX_DIR}
 cd ${CVX_DIR}
 rm -rf sdpt3/
 rm -rf sedumi/
