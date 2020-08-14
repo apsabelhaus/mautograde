@@ -6,6 +6,8 @@ AUTOGRADER_DIR="/autograder"
 AUTOGRADER_DIR_SOURCE="${AUTOGRADER_DIR}/source"
 
 git clone https://bitbucket.org/tronroberto/mautograde.git /tmp
+cd /tmp/mautograde
+git pull
 cp -f /mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
 
 cd "${AUTOGRADER_DIR}/source"
