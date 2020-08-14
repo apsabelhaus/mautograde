@@ -9,6 +9,7 @@ regexpPairs={
     {'_dimensions$','Check that the dimensions of each output are as expected for typical inputs'}
     {'_types$','Check that the types of each output are as expected for typical inputs'}
     {'_inOut$','Check outputs for some fixed random inputs'}
+    {'^hinter$','Run matlabStyleHinter'}
     };
 
 if strcmpi(fName,'-help')
