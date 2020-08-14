@@ -5,7 +5,7 @@ set -x #echo every command
 AUTOGRADER_DIR="/autograder"
 AUTOGRADER_DIR_SOURCE="${AUTOGRADER_DIR}/source"
 
-git clone https://bitbucket.org/tronroberto/mautograde.git /tmp
+git clone https://bitbucket.org/tronroberto/mautograde.git /tmp/mautograde
 cd /tmp/mautograde
 git pull
 cp -f /mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
