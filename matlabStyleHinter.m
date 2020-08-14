@@ -1,3 +1,29 @@
+%A custom Matlab programming style hinter
+%function varargout=matlabStyleHinter(fileName,varargin)
+%The goal of the hinter is to provide suggestions to make Matlab programs
+%more legible and robust (the latter by avoiding common pitfalls).
+%Most of the guidelines are derived from the "MATLAB Style Guidelines 2.0",
+%by Richard Johnson [1], plus others identified by the author (Roberto
+%Tron). The hinter can be somewhat pedantic. Moreover, it uses a simple
+%regex-based rules, so false positives are possible. In addition, if
+%available, the program also runs the official Matlab hinter.
+%
+%Inputs
+%   fileName    Name of the file to analyze
+%Optional inputs
+%   'diary'     If the OUTPUT argument is not assigned, tee the terminal
+%               output to the file diary.txt
+%Outputs
+%   nbItems     Number of issues found
+%   output      A cell array of strings containing messages from the
+%               hinter. If this output is requested, it disables output to
+%               the terminal.
+%
+%References
+%   [1] Richard Johnson (2014). MATLAB Style Guidelines 2.0
+%       https://www.mathworks.com/matlabcentral/fileexchange/46056-matlab-style-guidelines-2-0,
+%       MATLAB Central File Exchange. Retrieved August 14, 2020.   
+ 
 function varargout=matlabStyleHinter(fileName,varargin)
 flagDiary=false;
 flagCountItems=nargout>0;
@@ -111,7 +137,8 @@ context.fid=fid;
 output=log_add(output,'* Programming style report');
 [nbItems,output]=actionCheck(context,actionList,output);
 
-if is_matlab()
+%check if Matlab's code analyzer is available
+if ~isempty(which('checkcode'))
     %run Matlab's standard checks
     output=log_add(output,'* Matlab Code Analyzer report');
     [nbItemsMatlab,output]=matlabCheck(context,output);
