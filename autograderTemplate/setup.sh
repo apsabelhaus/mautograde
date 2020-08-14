@@ -8,7 +8,7 @@ AUTOGRADER_DIR_SOURCE="${AUTOGRADER_DIR}/source"
 git clone https://bitbucket.org/tronroberto/mautograde.git /tmp/mautograde
 cd /tmp/mautograde
 git pull
-cp -f /mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
+cp -f /tmp/mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
 
 cd "${AUTOGRADER_DIR}/source"
 source setup_variables.sh
