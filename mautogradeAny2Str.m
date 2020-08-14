@@ -1,20 +1,20 @@
 %Transforms almost any variable into a string representation
-%function str=mautogradeAny2Str(s)
+%function str=mautogradeAny2Str(var)
 %Inputs
-%   s   The variable to transform
+%   var     The variable to transform
 %Optional inputs
 %   'appendTo',strPrev  append result to strPrev (default: strPrev='')
 %   'minimal'           do not add delimiters/labels 
 %Output
 %   str     The string representation; uses Line Feed (char(10)) to
 %           represent multiline strings
-function str=mautogradeAny2Str(s,varargin)
+function str=mautogradeAny2Str(var,varargin)
 strPrev='';
 flagMinimal=false;
 
 %optional parameters
 ivarargin=1;
-while ivarargin<=length(varargin)
+while ivarargin<=numel(varargin)
     switch lower(varargin{ivarargin})
         case 'appendto'
             ivarargin=ivarargin+1;
@@ -27,9 +27,9 @@ while ivarargin<=length(varargin)
     ivarargin=ivarargin+1;
 end
 
-switch class(s)
+switch class(var)
     case 'char'
-        str=s;
+        str=var;
         nbStrings=size(str,1);
         if flagMinimal
             delimiter='';
@@ -38,12 +38,12 @@ switch class(s)
         end
         str=[delimiter str delimiter];
     case 'double'
-        str=num2str(s);
+        str=num2str(var);
         if ~flagMinimal
             delimiterL='[';
             delimiterR=']';
-            if numel(s)>1
-                if size(s,1)==1
+            if numel(var)>1
+                if size(var,1)==1
                     str=[delimiterL str delimiterR];
                 else
                     str=char(delimiterL,str,delimiterR);
@@ -53,8 +53,8 @@ switch class(s)
         str=mautogradeChar2Multiline(str);
     case 'struct'
         str=strPrev;
-        for iStruct=1:numel(s)
-            thisStruct=s(iStruct);
+        for iStruct=1:numel(var)
+            thisStruct=var(iStruct);
             sNamesCells=[fieldnames(thisStruct) struct2cell(thisStruct)];
             str=mautogradeAny2Str(sNamesCells,'appendTo',str);
         end
@@ -63,7 +63,7 @@ switch class(s)
             str=mautogradeOutputAppend(str,'endstruct');
         end
     case 'cell'
-        cellStr=cellfun(@mautogradeAny2Str,s,'UniformOutput',false);
+        cellStr=cellfun(@mautogradeAny2Str,var,'UniformOutput',false);
         str='';
         nbRows=size(cellStr,1);
         for iCol=1:size(cellStr,2)
@@ -73,13 +73,13 @@ switch class(s)
         str=mautogradeChar2Multiline(str);
     case 'logical'
         if flagMinimal
-            str=mautogradeAny2Str(double(s),varargin{:});
+            str=mautogradeAny2Str(double(var),varargin{:});
         else
-            sStrCell=arrayfun(@logical2str, s, 'UniformOutput',false);
+            sStrCell=arrayfun(@logical2str, var, 'UniformOutput',false);
             str=mautogradeAny2Str(sStrCell);
         end
     case 'function_handle'
-        str=mautogradeOutputAppend(strPrev,func2str(s));
+        str=mautogradeOutputAppend(strPrev,func2str(var));
         if ~flagMinimal
             str=['@' str];
         end
