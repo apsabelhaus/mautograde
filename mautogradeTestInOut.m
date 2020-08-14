@@ -1,4 +1,4 @@
-%function [score,outputMsg]=mautogradeTestInOut(fhandle,data)
+%function [score,outputMsg]=mautogradeTestInOut(fhandle,data,varargin)
 %Inputs
 %   fhandle handle to function to test
 %   data    [nbTests x 1] array of structures with fields
