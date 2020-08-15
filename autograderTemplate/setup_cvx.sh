@@ -2,7 +2,7 @@
 CVX_DIR="${AUTOGRADER_DIR}/toolbox/cvx"
 mkdir -p ${CVX_DIR}
 
-apt-get install libopenblas-dev liboctave-dev
+apt-get --yes install libopenblas-dev liboctave-dev
 
 git clone -b rework https://github.com/cvxr/CVX.git/ ${CVX_DIR}
 cd ${CVX_DIR}

@@ -10,6 +10,11 @@ cd /tmp/mautograde
 git pull
 cp -f /tmp/mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
 
+# Update Ubuntu apt sources
+cd "${AUTOGRADER_DIR}/source"
+cp us_sources.list /etc/apt/sources.list
+apt update
+
 cd "${AUTOGRADER_DIR}/source"
 source setup_variables.sh
 cd "${AUTOGRADER_DIR}/source"
