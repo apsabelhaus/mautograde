@@ -4,7 +4,7 @@ AUTOGRADER_ZIP=autograder.zip
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
-zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template cvx_compile_all.m
+zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template cvx_compile_all.m us_sources.list
 
 source setup_variables.sh
 echo $0: Remember to change the repository sub-dir in setup_variables_testdir if necessary
