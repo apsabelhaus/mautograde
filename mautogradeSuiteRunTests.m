@@ -1,21 +1,29 @@
 %function mautogradeRunTests(fileName)
-%Run the mAutograde test script in fileName.m, then write the results to
+%Run the mAutograde test suite in fileName.m, then write the results to
 %standard output. 
 %Inputs
 %   fileName    name of the test suite file. If fileName is not the name of
 %       a file but it is the name of a directory, look for all the files
 %       starting/ending with "test" in that directory, and run tem as
-%       mAutograde scripts. If fileName is empty, use the current directory.
+%       mAutograde suites. If fileName is empty, use the current directory.
+
+% TODO: extract a "runSuite" function
+
 function mautogradeSuiteRunTests(fileName)
+flagVerbose=true;
+
 switch exist(fileName,'file')
     case 2
         %fileName is an actual .m file
-        [filePath,scriptName]=fileparts(fileName);
+        [filePath,suiteName]=fileparts(fileName);
         if ~isempty(filePath) && ~strcmp(filePath,'.')
             addpath(filePath)
         end
-        fileName=[scriptName,'.m'];
-        eval(['testResults= ' scriptName '();'])
+        fileName=[suiteName,'.m'];
+        if flagVerbose
+            disp(['** Test suite: ' suiteName])
+        end
+        eval(['testResults= ' suiteName '();'])
         testInfo=mautogradeSuiteScan(fileName);
         mautogradeSuiteJsonWriter(testResults,testInfo)
     case 7
@@ -25,12 +33,15 @@ switch exist(fileName,'file')
         testResults=[];
         testInfo=[];
         for iFile=1:length(testFileNames)
-            scriptNameWithExt=testFileNames{iFile};
-            scriptName=strrep(scriptNameWithExt,'.m','');
-            cmd=['testResults=[testResults; ' scriptName '()];'];
+            suiteNameWithExt=testFileNames{iFile};
+            suiteName=strrep(suiteNameWithExt,'.m','');
+            if flagVerbose
+                disp(['** Test suite: ' suiteName])
+            end
+            cmd=['testResults=[testResults; ' suiteName '()];'];
             eval(cmd)
-            scriptFullName=fullfile(fileName,scriptNameWithExt);
-            testInfo=structMerge(testInfo,mautogradeSuiteScan(scriptFullName));
+            suiteFullName=fullfile(fileName,suiteNameWithExt);
+            testInfo=structMerge(testInfo,mautogradeSuiteScan(suiteFullName));
         end
         mautogradeSuiteJsonWriter(testResults,testInfo)
     otherwise

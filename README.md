@@ -21,6 +21,10 @@ You can run a test suite (group of tests) using the command `mautogradeSuiteRunT
 * A directory, the script will look for all the `.m` files starting or ending with the word `test` (case insensitive). The results from all tests in all such files will be concatenated.
 The results of the test are produced on the standard output using the JSON format; see https://gradescope-autograders.readthedocs.io/en/latest/specs/ for details on the output content. The output intended to be redirected to the `result.json` file used by Gradescope, as done in the provided `run_autograder` BASH script.
 
+## Example tests
+1. Clone the example tests from https://bitbucket.org/tronroberto/mautogradeexampletests to any directory, say "path/to/exampleTests"
+2. From mAutograde's directory, run "mautogradeSuiteRunTests /path/to/exampleTests"
+
 # Known bugs and limitations
 - The framework does not support setup/tear-down of test fixtures.
 - The function mautogradeCmpEq does not work correctly for values such as Inf and Nan when a comparison tolerance is specified.

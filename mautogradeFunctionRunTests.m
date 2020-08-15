@@ -38,6 +38,7 @@
 %       
 function tests=mautogradeFunctionRunTests(functions)
 flagRethrowNonAssertionErrors=false;
+flagVerbose=true;
 
 nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',''),nbFunctions,1);
@@ -73,6 +74,9 @@ for iFunction=1:nbFunctions
     tests(iFunction).Passed=1;
     tic
     output='';
+    if flagVerbose
+        disp(['* Test function: ' fAutoTestName])
+    end
     try
         switch nargout(f)
             case 0

@@ -3,5 +3,5 @@
 function outputMsg=mautogradeOutputFromCell(cellStr)
 outputMsg=[];
 for message=cellStr(:)'
-    outputMsg=mautogradeOutputAppend(outputMsg,outputMsg);
+    outputMsg=mautogradeOutputAppend(outputMsg,message{1});
 end

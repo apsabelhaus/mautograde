@@ -10,9 +10,9 @@
 %Outputs
 %   As other test functions
 function [score,outputMsg]=mautogradeTestStyleHinter(fileName,varargin)
-scoreMax=0.3;
+scoreMax=1;
 scoreMin=0.0;
-scoreItem=0.1;
+scoreItem=0.3;
 %optional parameters
 ivarargin=1;
 while ivarargin<=numel(varargin)
