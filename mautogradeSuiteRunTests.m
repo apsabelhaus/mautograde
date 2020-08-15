@@ -10,7 +10,7 @@
 % TODO: extract a "runSuite" function
 
 function mautogradeSuiteRunTests(fileName)
-flagVerbose=true;
+flagVerbose=false;
 
 switch exist(fileName,'file')
     case 2

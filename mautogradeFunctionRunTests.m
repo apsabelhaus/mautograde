@@ -38,7 +38,7 @@
 %       
 function tests=mautogradeFunctionRunTests(functions)
 flagRethrowNonAssertionErrors=false;
-flagVerbose=true;
+flagVerbose=false;
 
 nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',''),nbFunctions,1);
