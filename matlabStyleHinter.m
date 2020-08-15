@@ -111,14 +111,14 @@ actionList={
     {'for\s+[^ijk]\w*\s*=', 'Prefix iterator variable names with i, j, k etc. (e.g., instead of `for cell=1:5` use `for iCell=1:nbCells`).'}
     {'\<(quiver|figure|plot|alpha|angle|axes|axis|balance|beta|contrast|gamma|image|info|input|length|line|mode|power|rank|run|start|text|type)\>[\s\w,\]]*=','Avoid variable names that shadow functions'}
     {'\<global\>','Do not use global variables.'}
-    {'~(','This type of logical negation can be usually avoided by reversing the condition (e.g., `if ~(i==1)` should be changed to `if i~=1`)'}
+    {'~\(','This type of logical negation can be usually avoided by reversing the condition (e.g., `if ~(i==1)` should be changed to `if i~=1`)'}
     {'\<(?:sym|syms|solve)\>',@(output,context,idx) aFileNameContains(output,'sym',['Do not use symbolic variables for standard computations. ' ...
         'You can use the symbolic toolbox to derive expressions, but then write those expressions as standard Matlab functions. '  ...
         'For scripts/functions that perform the derivation, include the word `Sym` in the file name.'],context,idx)}
     {'\<(?:figure|plot?|quiver?)\>',@(output,context,idx) aFileNameContains(output,'(?:test|plot)','Display figures only in test or plot functions (i.e.,the file name should contain `test` or `plot`).',context,idx)}
     {'((&&|\|\|)\S|\S(&&|\|\|))','Surround && and || by spaces.'}
     {'\<(for|while|function|global|switch|try|if|elseif)[{\(]','Follow MATLAB keywords by spaces.',struct('caseInsensitive',false)}
-    {'pinv\s*\([\w_\:\(\)]*)\s*\*','Use the backslash operator instead of multiplying pinv() with another vector or matrix.'}
+    {'pinv\s*\([\w_\:\(\)]*\)\s*\*','Use the backslash operator instead of multiplying pinv() with another vector or matrix.'}
     {'\*\s*pinv\s*\(','Use the slash operator instead of multiplying by pinv().'}
     {'\<length\s*\(','Warning: the function length() when called on a 2-D array behaves differently depending on whether the array contains a single column or not. Consider using size() or numel() instead.'}
     {'%#ok','Do not suppress warnings from the MATLAB''s linter',struct('keepComments',false)}
@@ -288,15 +288,25 @@ output=[output;s];
 
 function log_display(output)
 for iLine=1:numel(output)
-    fprintfWrap('%s\n',output{iLine})
+    if is_matlab()
+        fprintfWrap('%s\n',output{iLine})
+    else
+        fprintf('%s\n',output{iLine})
+    end
 end
 
 function fprintfWrap(varargin)
 %Get string equivalent to fprintf output
+%TODO: the regex for wrapping does not work on Octave
 str=sprintf(varargin{:});
 %Get command window size
 cmsz = get(0,'CommandWindowSize'); 
-width = cmsz(1); 
+width = cmsz(1);
+if width<=0
+    %This happens for Octave
+    %Set to a arbitrary number
+    width=160;
+end
 %Wrap string
 strWrap=regexprep(str,['.{1,' num2str(width) '}\s'],'$0\n');
 fprintf(strWrap(1:end-1))
