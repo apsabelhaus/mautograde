@@ -5,10 +5,9 @@ set -x #echo every command
 AUTOGRADER_DIR="/autograder"
 AUTOGRADER_DIR_SOURCE="${AUTOGRADER_DIR}/source"
 
-git clone https://bitbucket.org/tronroberto/mautograde.git /tmp/mautograde
-cd /tmp/mautograde
-git pull
-cp -f /tmp/mautograde/autograderTemplate/* ${AUTOGRADER_DIR_SOURCE}
+# The line below is useful during debug of the setup scripts,
+# otherwise it can be just ignored
+# source setup_selfupdate
 
 # Update Ubuntu apt sources
 cd "${AUTOGRADER_DIR}/source"
