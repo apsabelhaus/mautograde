@@ -3,7 +3,9 @@ testResults = mautogradeFunctionRunTests(localfunctions);
 end
 
 function [score,output]=hinter(testCase)
-[score,output]=mautogradeTestInOutDimensions(testCase.functionTestedFileName);
+% MAX_SCORE = 0.3
+% MAX_SCORE_BEFORE_NORMALIZATION = 1
+[score,output]=mautogradeTestStyleHinter(testCase.functionTestedFileName);
 end
 
 function [score,output]=dimensionsAssigned(testCase)
