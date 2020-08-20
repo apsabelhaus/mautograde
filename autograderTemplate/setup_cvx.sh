@@ -16,3 +16,6 @@ cp "${AUTOGRADER_DIR_SOURCE}/cvx_compile_all.m" .
 
 # Compile CVX under octave
 octave --no-gui --eval "cvx_compile_all"
+
+# Patch the display.m function to avoid errors in Octave
+patch "/autograder/toolbox/cvx/lib/@cvxcnst/display.m" "${AUTOGRADER_DIR_SOURCE}/display.m.patch"

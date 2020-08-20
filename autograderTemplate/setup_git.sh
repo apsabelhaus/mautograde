@@ -8,4 +8,4 @@ git config --global user.name "Gradescope Autograder"
 git clone https://tronroberto@bitbucket.org/tronroberto/mautograde.git $MAUTOGRADE_DIR
 
 #Clone autograder actual tests (requires deploy key)
-git clone $GIT_REPO $MAUTOGRADE_TESTS_DIR
+git clone $GIT_REPO $MAUTOGRADE_TESTS_REPO_DIR
