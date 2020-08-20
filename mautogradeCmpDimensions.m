@@ -23,7 +23,7 @@ while ivarargin<=length(varargin)
     ivarargin=ivarargin+1;
 end
 if ~all(size(expected)==[1 2]) || ~all(size(expected)==[1 2])
-    error('Expected comparoson of dimensions ([1x2] vectors)')
+    error('Expected comparison of dimensions ([1x2] vectors)')
 end
 if prod(expected)==0
     fractionCorrect=double(prod(actual)==0);

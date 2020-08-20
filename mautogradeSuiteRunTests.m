@@ -32,7 +32,11 @@ switch exist(fileName,'file')
         addpath(fileName)
         testResults=[];
         testInfo=[];
-        for iFile=1:length(testFileNames)
+        nbTestFiles=length(testFileNames);
+        if nbTestFiles==0
+            warning('No test files found in %s',fileName)
+        end
+        for iFile=1:nbTestFiles
             suiteNameWithExt=testFileNames{iFile};
             suiteName=strrep(suiteNameWithExt,'.m','');
             if flagVerbose
