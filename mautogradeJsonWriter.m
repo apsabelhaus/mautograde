@@ -48,8 +48,10 @@ if isempty(indentation)
 end
 
 function writeChar(fid,s)
+% Remove invalid control characters
+s(s<=31)=[];
 fprintf(fid,'"%s"%s"',s);
-    
+
 function writeStruct(fid,s,indentation)
 fields=fieldnames(s);
 nbFields=length(fields);
