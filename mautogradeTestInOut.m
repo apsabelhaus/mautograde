@@ -12,7 +12,8 @@
 %               and expected outputs. Each function returns true if they
 %               are equivalent. Defaults to mautogradeCmpEq.
 %Optional inputs
-%   'fname',fname     Name of the function fTested to be used in messages.
+%   'fname',fname   Name of the function fTested to be used in messages.
+%   'verbose'       Print to terminal every step
 %Outputs
 %   score       Total number of outputs, across all tests, that passed
 %   outputMsg   Message with what tests failed (none if all pass)
@@ -23,6 +24,7 @@ score=0;
 outputMsg='';
 flagPassed=true;
 fTestedName=mautogradeAny2Str(fTested,'minimal');
+flagVerbose=false;
 
 %optional parameters
 ivarargin=1;
@@ -31,6 +33,8 @@ while ivarargin<=length(varargin)
         case 'fname'
             ivarargin=ivarargin+1;
             fTestedName=varargin{ivarargin};
+        case 'verbose'
+            flagVerbose=true;
         otherwise
             error(['Argument ' varargin{ivarargin} ' not valid!'])
     end
@@ -58,6 +62,19 @@ for iTest=1:nbTests
         otherwise
             error('Handling of class of fTested not implemented');
     end
+    %verbose output if requested
+    if flagVerbose
+        if nbTests>1
+            fprintf(' Test %d/%d',iTest,nbTests);
+        end
+        disp('  Inputs')
+        disp(mautogradeAny2Str(inputActual,'minimal'))
+        disp('  Outputs, expected')
+        disp(mautogradeAny2Str(outputExpected,'minimal'))
+        disp('  Outputs, actual')
+        disp(mautogradeAny2Str(outputActual,'minimal'))
+    end
+    
     %compare actual and expected outputs
     if isfield(dataInOut(iTest),'cmp') && ~isempty(dataInOut(iTest).cmp)
         cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
