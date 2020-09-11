@@ -1,5 +1,5 @@
 %Transforms almost any variable into a string representation
-%function str=mautogradeAny2Str(var)
+%function str=mautogradeAny2Str(var,varargin)
 %Inputs
 %   var     The variable to transform
 %Optional inputs
