@@ -23,7 +23,10 @@
 %   [1] Richard Johnson (2014). MATLAB Style Guidelines 2.0
 %       https://www.mathworks.com/matlabcentral/fileexchange/46056-matlab-style-guidelines-2-0,
 %       MATLAB Central File Exchange. Retrieved August 14, 2020.   
- 
+
+%TODO: find function "string"
+%TODO: string comparison with == instead of strcmp
+
 function varargout=matlabStyleHinter(fileName,varargin)
 flagDiary=false;
 flagCountItems=nargout>0;
@@ -177,11 +180,14 @@ while flagContinueReading
     else
         for iAction=1:nbActions
             action=actionList{iAction};
+            %set default normalization option if necessary
             if numel(action)<3
                 action{3}=[];
             end
+            %normalize line and add it to context
             lineStrNorm=lineNormalization(lineStr,action{3});
             context.lineStrNorm=lineStrNorm;
+            %look for regexp pattern
             idx=regexp(lineStrNorm,action{1},'once');
             flag=false;
             if ~isempty(idx)
@@ -269,7 +275,7 @@ if isempty(idx)
 else
     indicators=repmat(' ',1,numel(str));
     indicators(idx)='^';
-    output=log_printf(output,'%s%s',indent,str);
+    output=log_add(output,[indent str]);
     output=log_printf(output,'%s%s',indent,indicators);
 end
 
