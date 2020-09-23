@@ -22,7 +22,7 @@
 %References
 %   [1] Richard Johnson (2014). MATLAB Style Guidelines 2.0
 %       https://www.mathworks.com/matlabcentral/fileexchange/46056-matlab-style-guidelines-2-0,
-%       MATLAB Central File Exchange. Retrieved August 14, 2020.   
+%       MATLAB Central File Exchange. Retrieved August 14, 2020.
 
 %TODO: find function "string"
 %TODO: string comparison with == instead of strcmp
