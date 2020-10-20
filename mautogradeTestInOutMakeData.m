@@ -92,7 +92,7 @@ if nargout==0 || fileSaveFlag
             else
                 fprintf('Updated  MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.')
             end
-            cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''')'];
+            cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''',''quickReport'')'];
             fprintf('To run the autoTest, try\n\t%s\n', cmdMatlab)
             if ismac
                 cmd=['echo "' cmdMatlab '" | pbcopy'];

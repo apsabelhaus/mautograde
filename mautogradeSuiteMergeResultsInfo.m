@@ -1,18 +1,8 @@
-%Write the results of a test suite to a Gradescope-compatible JSON file
-%function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
-%Inputs
-%   testResults     Results from mautogradeSuiteRunTests()
-%   testInfo        Results from mautogradeSuiteScan()
-%   flagWriteFile   (default true)  If true, write to a 'results.json'
-%       file, otherwise, output to terminal
-function mautogradeSuiteJsonWriter(testResults,testInfo,flagWriteFile)
+%function suiteResults=mautogradeSuiteMergeResultsInfo(testResults,testInfo)
+%Merges information on the test obtained by scanning the source with the
+%actual test results
+function suiteResult=mautogradeSuiteMergeResultsInfo(testResults,testInfo)
 flagIncludeTerminalOutput=false;
-if ~exist('testInfo','var')
-    testInfo=[];
-end
-if ~exist('flagWriteFile','var')
-    flagWriteFile=false;
-end
 
 nbResults=length(testResults);
 testResultsStruct=struct('name',{testResults.Name});
@@ -87,20 +77,6 @@ for iResult=1:nbResults
 end
 suiteResult.execution_time=sum([testResults.Duration]);
 suiteResult.tests=testResultsStruct;
-
-if flagWriteFile
-    fid=fopen('results.json','w');
-    if fid<0
-        error('Cannot open results.json file')
-    end
-else
-    fid=1;
-end
-mautogradeJsonWriter(fid,suiteResult)
-if flagWriteFile
-    fclose(fid);
-end
-
 
 %function val=getFieldOrDefault(data,fields,valDefault)
 %Get (possibly nested) fields, or a default value if does not exist or

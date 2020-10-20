@@ -6,11 +6,28 @@
 %       a file but it is the name of a directory, look for all the files
 %       starting/ending with "test" in that directory, and run tem as
 %       mAutograde suites. If fileName is empty, use the current directory.
+%Optional inputs
+%   'quickReport' output a quick summary of the results instead of the full
+%       JSON report
 
 % TODO: extract a "runSuite" function
 
-function mautogradeSuiteRunTests(fileName)
+function mautogradeSuiteRunTests(fileName,varargin)
 flagVerbose=false;
+optsSuiteWriter={};
+%optional parameters
+ivarargin=1;
+while ivarargin<=length(varargin)
+    switch lower(varargin{ivarargin})
+        case 'quickreport'
+            optsSuiteWriter=[optsSuiteWriter 'type' 'quick'];
+        case 'verbose'
+            flagVerbose=true;
+        otherwise
+            error(['Argument ' varargin{ivarargin} ' not valid!'])
+    end
+    ivarargin=ivarargin+1;
+end
 
 switch exist(fileName,'file')
     case 2
@@ -25,7 +42,7 @@ switch exist(fileName,'file')
         end
         eval(['testResults= ' suiteName '();'])
         testInfo=mautogradeSuiteScan(fileName);
-        mautogradeSuiteJsonWriter(testResults,testInfo)
+        mautogradeSuiteWriter(testResults,testInfo,optsSuiteWriter{:})
     case 7
         %fileName is a directory
         testFileNames=getTestFileList(fileName);
@@ -47,7 +64,7 @@ switch exist(fileName,'file')
             suiteFullName=fullfile(fileName,suiteNameWithExt);
             testInfo=structMerge(testInfo,mautogradeSuiteScan(suiteFullName));
         end
-        mautogradeSuiteJsonWriter(testResults,testInfo)
+        mautogradeSuiteWriter(testResults,testInfo,optsSuiteWriter{:})
     otherwise
         error(['Could not find file ' fileName '.m or directory ' fileName])
 end
