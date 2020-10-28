@@ -21,7 +21,7 @@ function [fractionCorrect,totalItems]=mautogradeCmpEq(expected, actual, varargin
 flagUseTol=false;       %use tolerance
 flagRawCounts=false;    %return raw counts (useful for recursive calls)
 flagShiftDim=false;
-flagNaNWildcard=true;
+flagNaNWildcard=false;
 
 %optional parameters
 ivarargin=1;
@@ -58,7 +58,9 @@ switch class(expected)
             actual=shiftdim(actual);
         end
         if cmpSize(expected,actual)
-            fractionCorrect=sum(abs(expected(:)-actual(:))<=tol);
+            flagExpectedIsNaN=isnan(expected);
+            fractionCorrect=sum(isnan(actual(flagExpectedIsNaN)));
+            fractionCorrect=fractionCorrect+sum(abs(expected(~flagExpectedIsNaN)-actual(~flagExpectedIsNaN))<=tol);
         else
             fractionCorrect=0;
         end
