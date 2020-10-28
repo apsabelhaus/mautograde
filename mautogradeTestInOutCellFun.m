@@ -16,6 +16,8 @@ end
     'fname',mautogradeAny2Str(fTested,'minimal'));
 
 function varargout=outputWrap(fTested,nbOutputsExpected,fOutputCell,varargin)
+%TODO: handle the case where the function does not return the right number
+%of outputs
 output=cell(1,nbOutputsExpected);
 switch class(fTested)
     case 'function_handle'

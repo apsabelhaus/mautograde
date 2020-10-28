@@ -28,7 +28,8 @@ The results of the test are produced on the standard output using the JSON forma
 # Known bugs and limitations
 - The framework does not support setup/tear-down of test fixtures.
 - The function mautogradeCmpEq does not work correctly for values such as Inf and Nan when a comparison tolerance is specified.
-
+- If the expected and actual number of outputs of a function are different, the error messages are unhelpful
+- In the options for a test, if MAX_SCORE~=1, MAX_SCORE_BEFORE_NORMALIZATION should be set to 1 by default.
 # mAutograde base files and development notes
 The `.m` files contain Octave/Matlab functions to run simple tests, collect the results, and write them to standard output.
 

@@ -17,7 +17,11 @@
 %Outputs
 %   score       Total number of outputs, across all tests, that passed
 %   outputMsg   Message with what tests failed (none if all pass)
-%   
+%
+
+%TODO: handle the case where the function does not return the right number
+%of outputs
+
 function [score,outputMsg,flagPassed]=mautogradeTestInOut(fTested,dataInOut,varargin)
 nbTests=length(dataInOut);
 score=0;
