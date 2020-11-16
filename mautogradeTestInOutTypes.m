@@ -6,15 +6,9 @@ if ~isempty(dataInOut) && ~isfield(dataInOut,'cmp')
     dataInOut(1).cmp={{}};
 end
 for iData=1:numel(dataInOut)
-    if iscell(dataInOut(iData).cmp)
-        %replace all comparison functions with standard equality
-        dataInOut(iData).cmp(:)=deal({@mautogradeCmpEq});
-    else
-        if numel(dataInOut(iData).cmp)==1
-            dataInOut(iData).cmp=@mautogradeCmpEq;
-        else
-            dataInOut(iData).cmp(:)=deal(@mautogradeCmpEq);
-        end
-    end
+    %replace all comparison functions with standard equality
+    cmp=cell(size(dataInOut(iData).cmp));
+    cmp(:)=deal({@mautogradeCmpEq});
+    dataInOut(iData).cmp=cmp;
 end
 [score,outputMsg]=mautogradeTestInOutCellFun(fTested,dataInOut,@class);
