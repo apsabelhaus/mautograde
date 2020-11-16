@@ -1,6 +1,18 @@
-%function [score,outputMsg]=mautogradeTestInOutDimensions(fTested,dataInOut)
+%function [score,outputMsg]=mautogradeTestInOutDimensions(fTested,dataInOut,cmpOptions)
 %Similar to mautogradeTestInOut, but checks the output dimensions instead
-%of the actual values. The field dataInOut.cmp is not necessary.
-function [score,outputMsg]=mautogradeTestInOutDimensions(fTested,dataInOut)
+%of the actual values. The field dataInOut.cmp is overwritten by
+%@(x,y) mautogradeCmpDimensions(x,y,cmpOptions{:}), where cmpOptions, by default,
+%is empty
+function [score,outputMsg]=mautogradeTestInOutDimensions(fTested,dataInOut,cmpOptions)
+if ~exist('cmpOptions','var')
+    cmpOptions={};
+end
+if ~iscell(cmpOptions)
+    cmpOptions={cmpOptions};
+end
+for iData=1:numel(dataInOut)
+    %replace all comparison functions with equality with wildcards
+    dataInOut(iData).cmp(:)=deal({@(x,y) mautogradeCmpDimensions(x,y,cmpOptions{:})});
+end
 [score,outputMsg]=mautogradeTestInOutCellFun(fTested,dataInOut,@size);
 
