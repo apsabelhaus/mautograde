@@ -34,7 +34,7 @@ switch exist(fileName,'file')
         %fileName is an actual .m file
         [filePath,suiteName]=fileparts(fileName);
         if ~isempty(filePath) && ~strcmp(filePath,'.')
-            addpath(filePath)
+            addpathWithCommon(filePath)
         end
         fileName=[suiteName,'.m'];
         if flagVerbose
@@ -46,7 +46,7 @@ switch exist(fileName,'file')
     case 7
         %fileName is a directory
         testFileNames=getTestFileList(fileName);
-        addpath(fileName)
+        addpathWithCommon(fileName)
         testResults=[];
         testInfo=[];
         nbTestFiles=length(testFileNames);
@@ -67,6 +67,14 @@ switch exist(fileName,'file')
         mautogradeSuiteWriter(testResults,testInfo,optsSuiteWriter{:})
     otherwise
         error(['Could not find file ' fileName '.m or directory ' fileName])
+end
+
+%Add "filePath" and "filePath/../common" to MATLAB's path
+function addpathWithCommon(filePath)
+addpath(filePath)
+filePathCommon=fullfile(filePath,'..','common');
+if exist(filePathCommon,'file')==7
+    addpath(filePathCommon)
 end
 
 function testFileList=getTestFileList(dirName)
