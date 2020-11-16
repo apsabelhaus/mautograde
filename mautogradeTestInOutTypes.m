@@ -10,7 +10,11 @@ for iData=1:numel(dataInOut)
         %replace all comparison functions with standard equality
         dataInOut(iData).cmp(:)=deal({@mautogradeCmpEq});
     else
-        dataInOut(iData).cmp(:)=deal(@mautogradeCmpEq);
+        if numel(dataInOut(iData).cmp)==1
+            dataInOut(iData).cmp=@mautogradeCmpEq;
+        else
+            dataInOut(iData).cmp(:)=deal(@mautogradeCmpEq);
+        end
     end
 end
 [score,outputMsg]=mautogradeTestInOutCellFun(fTested,dataInOut,@class);
