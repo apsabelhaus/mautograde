@@ -11,6 +11,10 @@ if ~iscell(cmpOptions)
     cmpOptions={cmpOptions};
 end
 for iData=1:numel(dataInOut)
+    %add placeholder if empty
+    if isempty(dataInOut(iData).cmp)
+        dataInOut(iData).cmp={{}};
+    end
     %replace all comparison functions with equality with wildcards
     dataInOut(iData).cmp(:)=deal({@(x,y) mautogradeCmpDimensions(x,y,cmpOptions{:})});
 end
