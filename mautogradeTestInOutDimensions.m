@@ -12,7 +12,7 @@ if ~iscell(cmpOptions)
 end
 for iData=1:numel(dataInOut)
     %add placeholder if empty
-    if isempty(dataInOut(iData).cmp)
+    if ~isfield(dataInOut(iData),'cmp') || isempty(dataInOut(iData).cmp)
         dataInOut(iData).cmp={{}};
     end
     %replace all comparison functions with equality with wildcards
