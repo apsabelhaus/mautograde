@@ -63,4 +63,8 @@ for iTest=1:nbTests
     end
         
 end
+total_max_score=sum([suiteResults.tests.max_score]);
+total_score=sum([suiteResults.tests.score]);
+fprintf('\nTotal score and total max score: %.2f/%.2f\n',total_score,total_max_score)
+
 
