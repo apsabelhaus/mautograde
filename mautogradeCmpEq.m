@@ -58,9 +58,13 @@ switch class(expected)
             actual=shiftdim(actual);
         end
         if cmpSize(expected,actual)
-            flagExpectedIsNaN=isnan(expected);
-            fractionCorrect=sum(isnan(actual(flagExpectedIsNaN)));
-            fractionCorrect=fractionCorrect+sum(abs(expected(~flagExpectedIsNaN)-actual(~flagExpectedIsNaN))<=tol);
+            if isempty(expected)
+                fractionCorrect=1;
+            else
+                flagExpectedIsNaN=isnan(expected);
+                fractionCorrect=sum(isnan(actual(flagExpectedIsNaN)));
+                fractionCorrect=fractionCorrect+sum(abs(expected(~flagExpectedIsNaN)-actual(~flagExpectedIsNaN))<=tol);
+            end
         else
             fractionCorrect=0;
         end
@@ -81,7 +85,9 @@ switch class(expected)
 end
 
 if ~flagRawCounts
-    fractionCorrect=fractionCorrect/totalItems;
+    if totalItems~=0
+        fractionCorrect=fractionCorrect/totalItems;
+    end
 end
 
 function flag=cmpSize(expected,actual)
