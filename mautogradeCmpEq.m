@@ -125,7 +125,9 @@ if flag
     else
         fieldsExpected=fieldnames(expected);
         fieldsActual=fieldnames(actual);
-        flagFields=cmpCell(fieldsExpected,fieldsActual);
+        %check if fieldsActual has all the expected field
+        %Note: this ignores any extra field in fieldsActual
+        flagFields=isempty(setdiff(fieldsExpected,fieldsActual));
         fractionCorrect=0;
         if flagFields>0
             for iField=1:numel(fieldsExpected)
