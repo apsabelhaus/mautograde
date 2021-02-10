@@ -1,6 +1,12 @@
 # Overview
 Tools for using Matlab/Octave with the Gradescope Autograder.
 
+# General considerations
+A few caveats:
+* It really uses Octave rather than Matlab. For the most part, this does not cause problems, although there are some edge cases where something works in Matlab but not on Octave (e.g., when stacking arrays with zero dimensions, or using function handles loaded from .mat files, Octave is more picky).
+* Generally speaking, mAutograde works by defining a special .m file with local test functions that run different tests. Typically you have some predefined inputs and outputs, and there are predefined functions that count how many actual outputs match the expected ones (without giving the exact input/output pairs to the students). See the next section and the corresponding companion repository for more details.
+* Currently, the setup scripts are configured to pull the tests from a git repository (on Github or BitBucket). It takes a little more effort to setup the repository, but then updating the tests becomes much faster, because it only requires a simple instead of going through the Gradescope interface and re-building the assignment. It is possible to configure the scripts to pull the tests from the Gradescope assignment itself, but this requires changes to mAutograde.
+
 # Writing test files
 See the companion repository at https://bitbucket.org/tronroberto/mautogradeexampletests for specific instructions and example test files.
 
