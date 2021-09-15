@@ -93,7 +93,7 @@ for iFunction=1:nbFunctions
             tests(iFunction).Passed=0;
             tests(iFunction).Failed=1;
             tests(iFunction).Details=struct('identifier',ME.identifier,'message',ME.message);
-            output=mautogradeAny2Str(ME.stack);
+            output=mautogradeChar2Multiline(char(ME.identifier,ME.message,mautogradeAny2Str(ME.stack)));
             terminalOutput='';
         else
             rethrow(ME)
