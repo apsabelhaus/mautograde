@@ -37,13 +37,16 @@
 %                   function is malformed and does not give any output)
 %       
 function tests=mautogradeFunctionRunTests(functions)
-flagRethrowNonAssertionErrors=false;
 flagVerbose=false;
+flagRethrowNonAssertionErrors=false;
 
 %Global otions
 global mAutogradeOptions
 if isfield(mAutogradeOptions,'verbose') && mAutogradeOptions.verbose
     flagVerbose=true;
+end
+if isfield(mAutogradeOptions,'breakOnError') && mAutogradeOptions.breakOnError
+    flagRethrowNonAssertionErrors=true;
 end
 
 nbFunctions=length(functions);

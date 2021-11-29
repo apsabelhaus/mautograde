@@ -67,5 +67,5 @@ Used to write tests comparing expected results of functions on given inputs.
 ## Global setting for debugging
 Set a variable `mAutogradeOptions` as global with the following fields
 * `verbose`: when `true`, do not capture the output of functions in a variable, and show various debugging information
-* `breakOnError`: when `true`, call `keyboard()` whenever an actual output does not match the expected output in a test
+* `breakOnError`: when `true`, call `keyboard()` whenever an actual output does not match the expected output in a test, or when the submission code throws an exception
 * `breakOnScoreOverflow`: when `true`, call `keyboard()` whenever a normalized score from a comparison function is greater than one.
