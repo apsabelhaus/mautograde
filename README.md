@@ -11,7 +11,7 @@ A few caveats:
 See the companion repository at https://bitbucket.org/tronroberto/mautogradeexampletests for specific instructions and example test files.
 
 # How to use the autograder template
-The directory `autograderTemplate` contains the files to be submitted on Gradescope for the autograder. 
+The directory `autograderTemplate` contains the files to be submitted on Gradescope for the autograder.
 
 This template is not meant to actually contain tests; instead it setups access to a Git repository containing the actual tests. To use the template, follow these steps:
 * Copy a SSH deploy key in the autograder directory (file `id_rsa_deploy_key`).
@@ -36,6 +36,7 @@ The results of the test are produced on the standard output using the JSON forma
 - The function mautogradeCmpEq does not work correctly for values such as Inf and Nan when a comparison tolerance is specified.
 - If the expected and actual number of outputs of a function are different, the error messages are unhelpful
 - In the options for a test, if MAX_SCORE~=1, MAX_SCORE_BEFORE_NORMALIZATION should be set to 1 by default.
+
 # mAutograde base files and development notes
 The `.m` files contain Octave/Matlab functions to run simple tests, collect the results, and write them to standard output.
 
@@ -63,4 +64,8 @@ Used to write tests comparing expected results of functions on given inputs.
 * `mautogradeFunctionDescriptionDefault`: generates a default description from the test function name.
 * `mautogradeOptionList` and `mautogradeOptionBaseRegexp`: returns the list of options and the regexp used to match them in SuiteScan.
 
-
+## Global setting for debugging
+Set a variable `mAutogradeOptions` as global with the following fields
+* `verbose`: when `true`, do not capture the output of functions in a variable, and show various debugging information
+* `breakOnError`: when `true`, call `keyboard()` whenever an actual output does not match the expected output in a test
+* `breakOnScoreOverflow`: when `true`, call `keyboard()` whenever a normalized score from a comparison function is greater than one.

@@ -40,6 +40,12 @@ function tests=mautogradeFunctionRunTests(functions)
 flagRethrowNonAssertionErrors=false;
 flagVerbose=false;
 
+%Global otions
+global mAutogradeOptions
+if isfield(mAutogradeOptions,'verbose') && mAutogradeOptions.verbose
+    flagVerbose=true;
+end
+
 nbFunctions=length(functions);
 tests=repmat(struct('Name','','Passed',0,'Failed',0,'Duration',0,'Details',''),nbFunctions,1);
 for iFunction=1:nbFunctions
@@ -76,16 +82,31 @@ for iFunction=1:nbFunctions
     output='';
     if flagVerbose
         disp(['* Test function: ' fAutoTestName])
+        terminalOutput='';
     end
     try
+        %Capture different outputs depending if 
+        %If the verbose flag is inactive, capture all the terminal output
         switch nargout(f)
             case 0
-                terminalOutput=evalc('f(testCase)');
+                if ~flagVerbose
+                    terminalOutput=evalc('f(testCase)');
+                else
+                    eval('f(testCase)');
+                end
                 score=NaN;
             case 1
-                [terminalOutput,score]=evalc('f(testCase)');
+                if ~flagVerbose
+                    [terminalOutput,score]=evalc('f(testCase)');
+                else
+                    [score]=eval('f(testCase)');
+                end
             case 2
-                [terminalOutput,score,output]=evalc('f(testCase)');
+                if ~flagVerbose
+                    [terminalOutput,score,output]=evalc('f(testCase)');
+                else
+                    [score,output]=eval('f(testCase)');
+                end
         end
     catch ME
         if ~flagRethrowNonAssertionErrors || strcmp(ME.identifier,'MATLAB:assertion:failed')

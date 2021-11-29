@@ -23,12 +23,20 @@
 %of outputs
 
 function [score,outputMsg,flagPassed]=mautogradeTestInOut(fTested,dataInOut,varargin)
+
 nbTests=length(dataInOut);
 score=0;
 outputMsg='';
 flagPassed=true;
 fTestedName=mautogradeAny2Str(fTested,'minimal');
 flagVerbose=false;
+
+%Global otions
+global mAutogradeOptions
+if isfield(mAutogradeOptions,'verbose') && mAutogradeOptions.verbose
+    flagVerbose=true;
+end
+
 
 %optional parameters
 ivarargin=1;
@@ -69,7 +77,7 @@ for iTest=1:nbTests
     %verbose output if requested
     if flagVerbose
         if nbTests>1
-            fprintf(' Test %d/%d',iTest,nbTests);
+            fprintf(2,' Test %d/%d',iTest,nbTests);
         end
         disp('  Inputs')
         disp(mautogradeAny2Str(inputActual,'minimal'))
@@ -79,21 +87,32 @@ for iTest=1:nbTests
         disp(mautogradeAny2Str(outputActual,'minimal'))
     end
     
-    %compare actual and expected outputs
+    %setup comparison function
     if isfield(dataInOut(iTest),'cmp') && ~isempty(dataInOut(iTest).cmp)
+        %a custom comparison function was provided
         cmp=mautogradeEnsureCell(dataInOut(iTest).cmp);
         if length(cmp)~=nbOutputs
+            %if only one comparison function was provided but multiple
+            %outputs, use the same comparison function for all of them
             cmp(1:nbOutputs)=cmp;
         end
     else
+        %use the default comparison function for all outputs
         cmp=cell(1,nbOutputs);
         cmp(:)={@mautogradeCmpEq};
     end
+    %compare actual and expected outputs
     for iOutput=1:nbOutputs
         fEqual=cmp{iOutput};
         fractionEquivalent=double(fEqual(outputExpected{iOutput},outputActual{iOutput}));
         score=score+fractionEquivalent;
+        if isfield(mAutogradeOptions,'breakOnScoreOverflow') && mAutogradeOptions.breakOnScoreOverflow
+            keyboard
+        end
         if fractionEquivalent<1
+            if isfield(mAutogradeOptions,'breakOnError') && mAutogradeOptions.breakOnError
+                keyboard
+            end
             flagPassed=false;
             if nbTests>1
                 outputMsg=mautogradeOutputAppend(outputMsg,...

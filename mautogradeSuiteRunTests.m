@@ -15,6 +15,13 @@
 function mautogradeSuiteRunTests(fileName,varargin)
 flagVerbose=false;
 optsSuiteWriter={};
+
+%Global otions
+global mAutogradeOptions
+if isfield(mAutogradeOptions,'verbose') && mAutogradeOptions.verbose
+    flagVerbose=true;
+end
+
 %optional parameters
 ivarargin=1;
 while ivarargin<=length(varargin)
