@@ -68,7 +68,12 @@ switch class(expected)
         else
             fractionCorrect=0;
         end
-        totalItems=length(expected(:));
+        %we count empty arrays still as one item to compare
+        if isempty(expected)
+            totalItems=1;
+        else
+            totalItems=numel(expected(:));
+        end
     case {'char','logical'}
         if cmpSize(expected,actual)
             fractionCorrect=sum(expected(:)==actual(:));
