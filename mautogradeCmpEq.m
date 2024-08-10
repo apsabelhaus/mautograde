@@ -42,7 +42,7 @@ while ivarargin<=length(varargin)
     end
     ivarargin=ivarargin+1;
 end
-    
+
 switch class(expected)
     case 'double'
         if ~flagUseTol

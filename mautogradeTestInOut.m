@@ -30,11 +30,16 @@ outputMsg='';
 flagPassed=true;
 fTestedName=mautogradeAny2Str(fTested,'minimal');
 flagVerbose=false;
+flagBreakGivenTest=false;
 
 %Global otions
 global mAutogradeOptions
 if isfield(mAutogradeOptions,'verbose') && mAutogradeOptions.verbose
     flagVerbose=true;
+end
+
+if isfield(mAutogradeOptions,'breakGivenTest') && ~isempty(mAutogradeOptions.breakGivenTest)
+    flagBreakGivenTest=true;
 end
 
 
@@ -111,6 +116,9 @@ for iTest=1:nbTests
         end
         if fractionEquivalent<1
             if isfield(mAutogradeOptions,'breakOnError') && mAutogradeOptions.breakOnError
+                debugFileName='debugData.mat';
+                save(debugFileName,'fTested','inputActual','outputActual','outputExpected')
+                % Debug info saved to debugFileName
                 keyboard
             end
             flagPassed=false;
