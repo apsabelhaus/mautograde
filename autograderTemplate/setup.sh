@@ -11,7 +11,9 @@ AUTOGRADER_DIR_SOURCE="${AUTOGRADER_DIR}/source"
 
 # Update Ubuntu apt sources
 cd "${AUTOGRADER_DIR}/source"
-cp us_sources.list /etc/apt/sources.list
+# add-apt-repository -y universe
+# add-apt-repository -y multiverse
+# add-apt-repository -y restricted
 apt update
 
 cd "${AUTOGRADER_DIR}/source"

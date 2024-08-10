@@ -90,7 +90,7 @@ if nargout==0 || fileSaveFlag
             if nbMatches==0
                 warning([mfilename ':matchNotFound'],'No MAX_SCORE_BEFORE_NORMALIZATION found in the autoTest file.')
             else
-                fprintf('Updated  MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.')
+                fprintf('Updated MAX_SCORE_BEFORE_NORMALIZATION options in the autoTest file.\n')
             end
             cmdMatlab=['mautogradeSuiteRunTests(''' fileNameTest ''',''quickReport'')'];
             fprintf('To run the autoTest, try\n\t%s\n', cmdMatlab)
@@ -102,7 +102,7 @@ if nargout==0 || fileSaveFlag
                 end
             end
         else
-            warning([mfilename ':testNotFound'],['Test file ' fileNameTest ' not found'])
+            warning([mfilename ':testNotFound'],['Test file ' fileNameTest ' not found. Check that the file names for the tests are as expected.'])
         end
     end
 end
