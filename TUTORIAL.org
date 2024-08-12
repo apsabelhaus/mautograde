@@ -1,8 +1,8 @@
 * Tutorial for creating and setting up autograders from a private Git repository
 ** Cloning ~mAutograde~ and the example tests
 This tutorial will use three repositories.
-1) :: The main test harness to run and debug tests, and to setup the Gradescope programming assignment.
-2) :: The tests that will be run by Gradescope.
+1) ~mAutograde~ (https://tronroberto@bitbucket.org/tronroberto/mautograde.git) :: The main test harness to run and debug tests, and to setup the Gradescope programming assignment.
+2) ~mAutograde Example Tests~ (https://tronroberto@bitbucket.org/tronroberto/mautogradeexampletests.git) :: The tests that will be run by Gradescope.
 3) :: A solution to the assignment, which will double also as a submission to test the autograder.
 Clone the three repositories into the same directory. Your directory should look as follows
 #+begin_export ascii
