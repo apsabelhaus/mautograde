@@ -109,6 +109,9 @@ for iTest=1:nbTests
     %compare actual and expected outputs
     for iOutput=1:nbOutputs
         fEqual=cmp{iOutput};
+        if isempty(fEqual)
+            fEqual=@mautogradeCmpEq;
+        end
         fractionEquivalent=double(fEqual(outputExpected{iOutput},outputActual{iOutput}));
         score=score+fractionEquivalent;
         if isfield(mAutogradeOptions,'breakOnScoreOverflow') && mAutogradeOptions.breakOnScoreOverflow
