@@ -22,5 +22,6 @@ cd "${AUTOGRADER_DIR}/source"
 source setup_git.sh
 cd "${AUTOGRADER_DIR}/source"
 source setup_octave.sh
-cd "${AUTOGRADER_DIR}/source"
-source setup_cvx.sh
+# CVX dropped support for Octave, and patching it correctly is too cumbersome
+# cd "${AUTOGRADER_DIR}/source"
+# source setup_cvx.sh
