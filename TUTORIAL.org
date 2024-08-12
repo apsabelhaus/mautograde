@@ -69,6 +69,7 @@ Edit the file ~mAutograde/autograderTemplate/setup_variables.sh~, and in particu
 - ~GIT_REPO~ :: The SSH url of the repository for the tests. The deployment key should correspond to this repository.
 - ~MAUTOGRADE_TESTS_DIR~ :: The subdirectory in the repository with the tests to use. This allows to have a single repository (and a single deploy key) for multiple assignments.
 Compress all the files from ~mAutograde/autograderTemplate~ into an archive called ~archive.zip~, or run the ~make_autograder~ script which will perform this step for you (requires the ~bash~ interpreter).
+The files are derived from the instructions at https://gradescope-autograders.readthedocs.io/en/latest/git_pull/.
 *** Create and test the Gradescope programming assigment
 Create a new programming assigment on Gradescope using the ~archive.zip~ file created at the previous step. After Gradescope create the image, use the "Test autograder" link to upload the reference solution and check that the tests work as expected.
 
