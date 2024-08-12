@@ -56,7 +56,7 @@ file with name `⟨nameOfFunction⟩_autoTest.m`. Note that the
 `_autoTest.m` suffix is mandatory, `mAutograde` will **not consider as
 tests** files without this suffix (this is useful to include extra code
 that is necessary to create more complex tests, but does not constitute
-a test suite). See the file `WRITING_TESTS.org` and the test suites
+a test suite). See the file `WRITING_TESTS.md` and the test suites
 included in the `mAutogradeExampleTests` repository for details on how
 to write the tests, including standard tests running the built-in
 `mAutograde` hinter, an testing for the size and type of the outputs.
