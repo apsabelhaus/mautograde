@@ -7,5 +7,6 @@ fi
 zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template # cvx_compile_all.m *.patch
 
 source setup_variables.sh
+source setup_variables.sh
 echo $0: Remember to change the repository sub-dir in setup_variables if necessary
 echo $0: Current value for MAUTOGRADE_TESTS_DIR is $MAUTOGRADE_TESTS_DIR

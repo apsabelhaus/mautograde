@@ -1,8 +1,8 @@
 #This file is meant to be sourced by setup.sh and run_autograder
 
 #Variables to change to match your setup
-GIT_HOST="bitbucket.org" #change to github.com if using GitHub
-GIT_REPO="git@$GIT_HOST:tronroberto/mautogradeexampletests.git"
+GIT_HOST="github.com" #change to github.com if using GitHub
+GIT_REPO="git@$GIT_HOST:apsabelhaus/mautogradeexampletests_tron.git"
 
 # Gradescope setup
 AUTOGRADER_DIR="/autograder"
