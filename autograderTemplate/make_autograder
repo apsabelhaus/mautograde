@@ -13,7 +13,11 @@ fi
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
+
+# Was, with manual path to private deploy key:
 #zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template # cvx_compile_all.m *.patch
+
+# with argument path to deploy key:
 zip -r "$AUTOGRADER_ZIP" run_autograder setup*.sh ssh_config_template -j $1 # cvx_compile_all.m *.patch
 
 source setup_variables.sh

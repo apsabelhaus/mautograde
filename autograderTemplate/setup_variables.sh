@@ -4,6 +4,9 @@
 GIT_HOST="github.com" #change to github.com if using GitHub
 GIT_REPO="git@$GIT_HOST:apsabelhaus/mautogradeexampletests_tron.git"
 
+# allows us to pass in the name of an arbitrary private keyfile to make_autograder, e.g., for the solutions repo for this assignment
+SSH_PRIVATE_KEYFILE="id_rsa_deploy_key"
+
 # Gradescope setup
 AUTOGRADER_DIR="/autograder"
 
