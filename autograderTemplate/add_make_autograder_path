@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Assuming you haven't moved this file from its place in the repository, and that you've cloned to a local directory that has a static path, 
+# we add this directory to your $PATH in your ~/.bashrc so that you can call `make_autograder` in another working directory.
+echo "Note, only run this script ONCE. Check your ~/.bashrc to ensure you haven't accidentally duplicated the command below"
+working_dir=$(pwd)
+new_path_with_this="export PATH=${new_path_cmd}${working_dir}:"
+# single quotes escape the $
+path_str='$PATH'
+new_path_cmd="${new_path_with_this}${path_str}"
+# write to our user's .profile setup script when opening a terminal
+#profile_path="~/.profile"
+echo $new_path_cmd >>~/.bashrc
+source ~/.bashrc

@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
+
+# Run this script to generate the file AUTOGRADER_ZIP, in a non-public directory, for upload to Gradescope.
 AUTOGRADER_ZIP=autograder.zip
+
+# Usage:
+# make_autograder -r user/gradertestsrepo.git -k /path/to/private/key 
+# Notes:
+#   Run this file from the directory where you would like the autograder .zip file to be generated.
+#   This directory must be private (or non-version-controlled). A recommendation is to add the template to your path
+# Arguments:
+# -r user/gradertestsrepo.git == your private repository containing your mAutograder tests
+# -k /path/to/private/key == local path to the private deploy key that corresponds with your private tests repo (the -r argument)
 
 # we now force the user to supply the path to the private key so that this repository can remain public
 if [[ $# -eq 0 ]] ; then
@@ -9,6 +20,8 @@ elif [[ $# -eq 1 ]] ; then
     KEYFILELOCALNAME="${KEYFILENAME##*/}"
     echo "Including the file $KEYFILENAME as $KEYFILELOCALNAME"
 fi
+
+# Copy all 
 
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"

@@ -1,5 +1,19 @@
 # Tutorial for creating and setting up autograders from a private Git repository
 
+## Quickstart Guide
+
+Below is a more detailed explanation of how `mAutograde` works, from Roberto Tron.
+
+To quickly use the autograder with the pass-in-arguments approach, rather than manually editing the scripts:
+
+1. Put your tests in a private repository, `.../p/`, and create a folder `p/autograder`
+2. Optional: add the path to the `make_autograder` executable to your shell. We have provided the `add_make_autograder_path.sh` file to edit your `~/.profile` for you, run it from the subdirectory `autograderTemplate` of this repository. (Otherwise, you will need to exectute `autograderTemplate/make_autograder` via its whole path.)
+3. Generate a deploy key for `p` per Roberto's instructions below, add the public key to Github/Bitbucket. Assume the private key is called `~/.ssh/p_deploy`
+4. Open a terminal in `p/autograder` and run the `make_autograder` script there, using the arguments described in the help for that script. It will copy the files from the `autograderTemplate` directory, and your private deploy key, to the working directory (that's why you're in `p/autograder`), patch the variables and setup scripts appropriately, and zip up the `autograder.zip` archive
+5. Upload your `autograder.zip` to Gradescope
+
+Note: do NOT run `make_autograder` in a directory that's publicly available or in a public repository. You will expose your private deploy key, and GitGuardian will get angry at you if you try to push it.
+
 ## Cloning `mAutograde` and the example tests
 
 This tutorial will use three repositories.
