@@ -25,3 +25,7 @@ source setup_octave.sh
 # CVX dropped support for Octave, and patching it correctly is too cumbersome
 # cd "${AUTOGRADER_DIR}/source"
 # source setup_cvx.sh
+
+# additionally, install python for mautograder_additional_tests if desired
+apt-get install -y python3 python3-pip python3-dev
+pip3 install pypdf openpyxl

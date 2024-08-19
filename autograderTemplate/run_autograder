@@ -22,3 +22,7 @@ cd "${SOURCE_DIR}"
 
 # Run tests
 octave --no-gui --eval "mautogradeSuiteRunTests $MAUTOGRADE_TESTS_DIR" > "${RESULT_DIR}"/results.json
+
+# Additionally, we can allow custom additions to the results, as desired by a user's implementation.
+# Create and implement the following function in whatever directory generates the autograder.zip file.
+./mautograder_additional_tests.py "${RESULT_DIR}"/results.json

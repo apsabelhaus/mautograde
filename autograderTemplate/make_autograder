@@ -4,28 +4,31 @@
 AUTOGRADER_ZIP=autograder.zip
 
 # Usage:
-# make_autograder -r user/gradertestsrepo.git -k /path/to/private/key 
+# make_autograder -r user/gradertestsrepo.git -k /path/to/private/key -a assignment_subdir
 # Notes:
 #   Run this file from the directory where you would like the autograder .zip file to be generated.
 #   This directory must be private (or non-version-controlled). A recommendation is to add the template to your path
 # Arguments:
 #   -r user/gradertestsrepo.git == your private repository containing your mAutograder tests
-#   -k /path/to/private/key == local path to the private deploy key that corresponds with your private tests repo (the -r argument)
+#   -k /path/to/private/key == local path to the private deploy key that corresponds with user/gradertestsrepo.git
+#   -a assignment_subdir == subdirectory in the user/gradertestsrepo.git that contains this assignment's tests. Eventually, mautogradeSuiteRunTests will be executed with this subfolder as the argument.
 # Example usage:
 #   make_autograder -r apsabelhaus/mautogradeexampletests_tron.git -k ~/.ssh/id_rsa_deploy_key
 
 # we now force the user to supply both arguments
 if [[ -z "$1" ]] ; then
-    echo "WARNING - No argument supplied, you must include both -r and -k."
+    echo "WARNING - No argument supplied, you must include -r, -k, and -t."
     exit 1
 fi
 
 # many thanks to https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
-while getopts "r:k:" opt; do
+while getopts "r:k:a:" opt; do
     case $opt in
         r) test_repo_remote_path="$OPTARG"
         ;;
         k) deploy_key_path="$OPTARG"
+        ;;
+        a) assignment_subdir="$OPTARG"
         ;;
         \?) echo "Invalid option -$OPTARG" >&2
         exit 1
@@ -37,6 +40,7 @@ done
 deploy_key_filename="${deploy_key_path##*/}"
 echo "Including the deploy key file $deploy_key_path as $deploy_key_filename"
 echo "Test repository set to $test_repo_remote_path"
+echo "Assignment subdirectory will be $test_repo_remote_path/$assignment_subdir"
 
 # Copy all files from the directory of this script to the current working directory
 # including the deploy key
@@ -65,24 +69,22 @@ echo $zipfiles
 # patch the variables with our arguments
 echo "Patching setup_variables.sh with user/gradertestsrepo.git as $test_repo_remote_path"
 sed -i -e "s#user/gradertestsrepo.git#$test_repo_remote_path#g" setup_variables.sh
-echo "Patching setup_variables.sh with d_rsa_deploy_key as $deploy_key_filename"
+echo "Patching setup_variables.sh with id_rsa_deploy_key as $deploy_key_filename"
 sed -i -e "s#id_rsa_deploy_key#$deploy_key_filename#g" setup_variables.sh
-echo "Patching ssh_config_template with d_rsa_deploy_key as $deploy_key_filename"
+echo "Patching ssh_config_template with id_rsa_deploy_key as $deploy_key_filename"
 sed -i -e "s#id_rsa_deploy_key#$deploy_key_filename#g" ssh_config_template
+echo "Patching setup_variables.sh with assignment_subdir as $assignment_subdir"
+sed -i -e "s#assignment_subdir#$assignment_subdir#g" setup_variables.sh
 
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
 
-zip -r "$AUTOGRADER_ZIP" $zipfiles $deploy_key_filename
+# If we're using the optional additional test python hook, add it to the archive too
 
-# Was, with manual path to private deploy key:
-#zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template # cvx_compile_all.m *.patch
+# finally generate the archive to upload to Gradescope
+zip -r "$AUTOGRADER_ZIP" $zipfiles "mautograder_additional_tests.py" $deploy_key_filename
 
-# with argument path to deploy key:
-# zip -r "$AUTOGRADER_ZIP" run_autograder setup*.sh ssh_config_template -j $1 # cvx_compile_all.m *.patch
-
-source setup_variables.sh
-source setup_variables.sh
-echo $0: Remember to change the repository sub-dir in setup_variables if necessary
+# we should source the new patched file and check
+source ./setup_variables.sh
 echo $0: Current value for MAUTOGRADE_TESTS_DIR is $MAUTOGRADE_TESTS_DIR
