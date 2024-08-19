@@ -23,7 +23,7 @@ fi
 # many thanks to https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
 while getopts "r:k:" opt; do
     case $opt in
-        r) repo_remote_path="$OPTARG"
+        r) test_repo_remote_path="$OPTARG"
         ;;
         k) deploy_key_path="$OPTARG"
         ;;
@@ -36,36 +36,51 @@ done
 # confirming arguments to the user
 deploy_key_filename="${deploy_key_path##*/}"
 echo "Including the deploy key file $deploy_key_path as $deploy_key_filename"
-echo "Test repository set to $repo_remote_path"
+echo "Test repository set to $test_repo_remote_path"
 
 # Copy all files from the directory of this script to the current working directory
 # including the deploy key
 cp $deploy_key_path .
 # thanks to https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-echo "Copying these files here for patching:"
 declare -a files_for_zip=("run_autograder"
                           "setup*.sh"
                           "ssh_config_template"
                         )
 
+# Note: Roberto's setup also includes cvx_compile_all.m *.patch
+
+# also unroll the files into one string for using zip
+zipfiles=""
 for i in "${files_for_zip[@]}"
 do
-    echo "$SCRIPT_DIR/$i"
+    #echo "$SCRIPT_DIR/$i"
     cp $SCRIPT_DIR/$i .
+    zipfiles="$zipfiles $i "
 done
+
+echo "Copying these files here for patching and inclusion into the autograder.zip:"
+echo $zipfiles
+
+# patch the variables with our arguments
+echo "Patching setup_variables.sh with user/gradertestsrepo.git as $test_repo_remote_path"
+sed -i -e "s#user/gradertestsrepo.git#$test_repo_remote_path#g" setup_variables.sh
+echo "Patching setup_variables.sh with d_rsa_deploy_key as $deploy_key_filename"
+sed -i -e "s#id_rsa_deploy_key#$deploy_key_filename#g" setup_variables.sh
+echo "Patching ssh_config_template with d_rsa_deploy_key as $deploy_key_filename"
+sed -i -e "s#id_rsa_deploy_key#$deploy_key_filename#g" ssh_config_template
 
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
 
-exit 1
+zip -r "$AUTOGRADER_ZIP" $zipfiles $deploy_key_filename
 
 # Was, with manual path to private deploy key:
 #zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template # cvx_compile_all.m *.patch
 
 # with argument path to deploy key:
-zip -r "$AUTOGRADER_ZIP" run_autograder setup*.sh ssh_config_template -j $1 # cvx_compile_all.m *.patch
+# zip -r "$AUTOGRADER_ZIP" run_autograder setup*.sh ssh_config_template -j $1 # cvx_compile_all.m *.patch
 
 source setup_variables.sh
 source setup_variables.sh
