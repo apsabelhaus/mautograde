@@ -9,23 +9,57 @@ AUTOGRADER_ZIP=autograder.zip
 #   Run this file from the directory where you would like the autograder .zip file to be generated.
 #   This directory must be private (or non-version-controlled). A recommendation is to add the template to your path
 # Arguments:
-# -r user/gradertestsrepo.git == your private repository containing your mAutograder tests
-# -k /path/to/private/key == local path to the private deploy key that corresponds with your private tests repo (the -r argument)
+#   -r user/gradertestsrepo.git == your private repository containing your mAutograder tests
+#   -k /path/to/private/key == local path to the private deploy key that corresponds with your private tests repo (the -r argument)
+# Example usage:
+#   make_autograder -r apsabelhaus/mautogradeexampletests_tron.git -k ~/.ssh/id_rsa_deploy_key
 
-# we now force the user to supply the path to the private key so that this repository can remain public
-if [[ $# -eq 0 ]] ; then
-    echo "WARNING - No argument supplied, so the private key to your solutions repository will NOT be included in autograder.zip."
-elif [[ $# -eq 1 ]] ; then
-    KEYFILENAME=$1
-    KEYFILELOCALNAME="${KEYFILENAME##*/}"
-    echo "Including the file $KEYFILENAME as $KEYFILELOCALNAME"
+# we now force the user to supply both arguments
+if [[ -z "$1" ]] ; then
+    echo "WARNING - No argument supplied, you must include both -r and -k."
+    exit 1
 fi
 
-# Copy all 
+# many thanks to https://unix.stackexchange.com/questions/129391/passing-named-arguments-to-shell-scripts
+while getopts "r:k:" opt; do
+    case $opt in
+        r) repo_remote_path="$OPTARG"
+        ;;
+        k) deploy_key_path="$OPTARG"
+        ;;
+        \?) echo "Invalid option -$OPTARG" >&2
+        exit 1
+        ;;
+    esac
+done
+
+# confirming arguments to the user
+deploy_key_filename="${deploy_key_path##*/}"
+echo "Including the deploy key file $deploy_key_path as $deploy_key_filename"
+echo "Test repository set to $repo_remote_path"
+
+# Copy all files from the directory of this script to the current working directory
+# including the deploy key
+cp $deploy_key_path .
+# thanks to https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+echo "Copying these files here for patching:"
+declare -a files_for_zip=("run_autograder"
+                          "setup*.sh"
+                          "ssh_config_template"
+                        )
+
+for i in "${files_for_zip[@]}"
+do
+    echo "$SCRIPT_DIR/$i"
+    cp $SCRIPT_DIR/$i .
+done
 
 if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
+
+exit 1
 
 # Was, with manual path to private deploy key:
 #zip -r "$AUTOGRADER_ZIP" id_rsa_deploy_key run_autograder setup*.sh ssh_config_template # cvx_compile_all.m *.patch

@@ -9,6 +9,5 @@ new_path_with_this="export PATH=${new_path_cmd}${working_dir}:"
 path_str='$PATH'
 new_path_cmd="${new_path_with_this}${path_str}"
 # write to our user's .profile setup script when opening a terminal
-#profile_path="~/.profile"
 echo $new_path_cmd >>~/.bashrc
 source ~/.bashrc
