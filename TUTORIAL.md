@@ -9,8 +9,9 @@ To quickly use the autograder with the pass-in-arguments approach, rather than m
 1. Put your tests in a private repository, `.../p/`, and create a folder `p/autograder`
 2. Optional: add the path to the `make_autograder` executable to your shell. We have provided the `add_make_autograder_path.sh` file to edit your `~/.profile` for you, run it from the subdirectory `autograderTemplate` of this repository. (Otherwise, you will need to exectute `autograderTemplate/make_autograder` via its whole path.)
 3. Generate a deploy key for `p` per Roberto's instructions below (<https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key>), add the public key to Github/Bitbucket. Assume the private key is called `~/.ssh/p_deploy`
-4. Open a terminal in `p/autograder` and run the `make_autograder` script there, using the arguments described in the help for that script. It will copy the files from the `autograderTemplate` directory, and your private deploy key, to the working directory (that's why you're in `p/autograder`), patch the variables and setup scripts appropriately, and zip up the `autograder.zip` archive
-5. Upload your `autograder.zip` to Gradescope
+4. NOTE, the private key must have correct permissions or else Github will complain. Be sure to double check that all the necessary files are executable as well.
+5. Open a terminal in `p/autograder` and run the `make_autograder` script there, using the arguments described in the help for that script. It will copy the files from the `autograderTemplate` directory, and your private deploy key, to the working directory (that's why you're in `p/autograder`), patch the variables and setup scripts appropriately, and zip up the `autograder.zip` archive
+6. Upload your `autograder.zip` to Gradescope
 
 Note: do NOT run `make_autograder` in a directory that's publicly available or in a public repository. You will expose your private deploy key, and GitGuardian will get angry at you if you try to push it.
 
