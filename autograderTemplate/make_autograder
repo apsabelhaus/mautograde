@@ -80,6 +80,13 @@ if [ -f "$AUTOGRADER_ZIP" ]; then
     rm "$AUTOGRADER_ZIP"
 fi
 
+# Set the file permissions correctly. Everything should be rwx except for the private key which should be u+rw and everything else off
+echo "Setting permissions..."
+chmod a+rwx *
+chmod u=rw $deploy_key_filename
+chmod o-rwx $deploy_key_filename
+chmod g-rwx $deploy_key_filename
+
 # If we're using the optional additional test python hook, add it to the archive too
 
 # finally generate the archive to upload to Gradescope
