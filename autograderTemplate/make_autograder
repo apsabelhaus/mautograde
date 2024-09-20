@@ -13,11 +13,11 @@ AUTOGRADER_ZIP=autograder.zip
 #   -k /path/to/private/key == local path to the private deploy key that corresponds with user/gradertestsrepo.git
 #   -a assignment_subdir == subdirectory in the user/gradertestsrepo.git that contains this assignment's tests. Eventually, mautogradeSuiteRunTests will be executed with this subfolder as the argument.
 # Example usage:
-#   make_autograder -r apsabelhaus/mautogradeexampletests_tron.git -k ~/.ssh/id_rsa_deploy_key
+#   make_autograder -r apsabelhaus/mautogradeexampletests_tron.git -k ~/.ssh/id_rsa_deploy_key -a hw2_tests
 
 # we now force the user to supply both arguments
 if [[ -z "$1" ]] ; then
-    echo "WARNING - No argument supplied, you must include -r, -k, and -t."
+    echo "WARNING - No argument supplied, you must include -r, -k, and -a."
     exit 1
 fi
 

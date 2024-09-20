@@ -25,4 +25,15 @@ octave --no-gui --eval "mautogradeSuiteRunTests $MAUTOGRADE_TESTS_DIR" > "${RESU
 
 # Additionally, we can allow custom additions to the results, as desired by a user's implementation.
 # Create and implement the following function in whatever directory generates the autograder.zip file.
+# ./mautograder_additional_tests.py "${RESULT_DIR}"/results.json
+
+# For more flexibility, check if we have put an updated version of mautograder_additional_tests.py in the tests directory
+# and copy it here / overwrite
+if [ -f "${MAUTOGRADE_TESTS_DIR}"/mautograder_additional_tests.py ]; then
+    echo "Copying updated mautograder_additional_tests.py from tests folder..."
+    cp "${MAUTOGRADE_TESTS_DIR}"/mautograder_additional_tests.py .
+else
+    echo "No mautograder_additional_tests.py update found, skipping..."
+fi
+
 ./mautograder_additional_tests.py "${RESULT_DIR}"/results.json
