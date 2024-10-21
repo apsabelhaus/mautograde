@@ -32,6 +32,8 @@ octave --no-gui --eval "mautogradeSuiteRunTests $MAUTOGRADE_TESTS_DIR" > "${RESU
 if [ -f "${MAUTOGRADE_TESTS_DIR}"/mautograder_additional_tests.py ]; then
     echo "Copying updated mautograder_additional_tests.py from tests folder..."
     cp "${MAUTOGRADE_TESTS_DIR}"/mautograder_additional_tests.py .
+    echo "Updating permissions on mautograder_additional_tests.py..."
+    chmod a+x mautograder_additional_tests.py
 else
     echo "No mautograder_additional_tests.py update in TESTS_DIR found, skipping..."
 fi
